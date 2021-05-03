@@ -1,6 +1,7 @@
 from tkinter import *
 from PIL import ImageTk, Image
 import MySQLdb
+import os
 
 
 #connecting_to_the_database
@@ -60,6 +61,8 @@ def login():
 def logg_destroy():
     logg.destroy()
     root.destroy()
+    os.system('python3 dashboard.py')
+
 
 def fail_destroy():
     fail.destroy()
@@ -68,10 +71,9 @@ def logged():
     global logg
     logg = Toplevel(root)
     logg.title("Welcome")
-    logg.geometry("300x150")
-    Label(logg, text="Welcome {} ".format(username_verify.get()), fg="green", font="bold").pack()
-    Label(logg, text="").pack()
-    Button(logg, text="Log-Out", bg="grey", width=8, height=1, command=logg_destroy).pack()
+    logg.geometry('{}x{}+510+285'.format(350, 100))
+    Label(logg, text="Welcome {}".format(username_verify.get()), fg="green", font="bold").pack()
+    Button(logg, text="OK", bg="grey", width=8, height=1, command=logg_destroy).pack()
 
 
 
@@ -79,8 +81,8 @@ def failed():
     global fail
     fail = Toplevel(root)
     fail.title("Invalid")
-    fail.geometry("300x150")
-    Label(fail, text="Invalid credentials...", fg="red", font="bold").pack()
+    fail.geometry(('{}x{}+510+285'.format(350, 100)))
+    Label(fail, text="Failed Login"'\n'"Check Username and Password", fg="red", font="bold").pack()
     Label(fail, text="").pack()
     Button(fail, text="Ok", bg="grey", width=8, height=1, command=fail_destroy).pack()
 
@@ -94,6 +96,7 @@ def login_verify():
     if results:
         for i in results:
             logged()
+
             break
     else:
         failed()

@@ -24,7 +24,6 @@ def add_admin_():
     global add_phone
     global add_email
 
-
 add_name = StringVar()
 add_username = StringVar()
 add_password = StringVar()
@@ -49,8 +48,148 @@ frame_top.grid_rowconfigure(1, weight=1)
 frame_top.grid_columnconfigure(0, weight=1)
 
 frame_right.grid_propagate(False)
+frame_left.grid_propagate(False)
+frame_top.grid_propagate(False)
+# -------------------------------------------------------------------------------------------------------------
+# top frame
 
-heading = Label(frame_right, text=" Add Admin ", font=("Times New Roman", 18, "bold"),  fg="White", bg="#285e5a")
+# Scrollable Text
+svar = tk.StringVar()
+Scrollable_text = tk.Label(frame_top, textvariable=svar, height=1, width=200, font=("Helvetica", 14, "bold"), fg="White", bg="#285e5a")
+
+def shif():
+    deli = 195
+    shif.msg = shif.msg[1:] + shif.msg[0]
+    svar.set(shif.msg)
+    root.after(deli, shif)
+
+shif.msg = '  Welcome  To  Medical  Store  Management  System!  Wear  Mask,  Stay  Safe!!  '
+shif()
+Scrollable_text.grid(column=0, row=1, pady=12, padx=50)
+
+# -------------------------------------------------------------------------------------------------------------
+# left dashboard
+
+# calling pages
+def call_dashboard():
+    root.destroy()
+    os.system('python3 dashboard.py')
+
+def call_viewadmin():
+    root.destroy()
+    os.system('python3 view_admin.py')
+
+def call_addmedicine():
+    root.destroy()
+    os.system('python3 add_medicine.py')
+
+def call_viewmedicine():
+    root.destroy()
+    os.system('python3 view_medicines.py')
+
+def call_viewcustomer():
+    root.destroy()
+    os.system('python3 view_customer.py')
+
+def call_viewsupplier():
+    root.destroy()
+    os.system('python3 view_supplier.py')
+
+def call_addsales():
+    root.destroy()
+    os.system('python3 add_sales.py')
+
+def call_viewsales():
+    root.destroy()
+    os.system('python3 view_sales.py')
+
+def call_addpurchase():
+    root.destroy()
+    os.system('python3 add_purchase.py')
+
+def call_viewpurchase():
+    root.destroy()
+    os.system('python3 view_purchase.py')
+
+
+# Left_button_Dashboard
+dashoboard = Button(frame_left, text="DASHBOARD", font=("Helvetica", 11, "bold"), command=call_dashboard,
+                    bg="#50aba5", width=21)
+dashoboard.grid(column=1, row=0, pady=12, padx=20)
+
+
+# Left_Menu1
+MenuBttn = Menubutton(frame_left, text="ADMIN", font=("Helvetica", 11, "bold"), bg="#50aba5", width=23)
+
+Menu1 = Menu(MenuBttn, tearoff=0)
+
+Menu1.add_command(label="       Add Admin       ", font=("Helvetica", 11, "bold"))
+Menu1.add_separator()
+Menu1.add_command(label="       Admin List      ", font=("Helvetica", 11, "bold"), command=call_viewadmin)
+
+MenuBttn["menu"] = Menu1
+MenuBttn.grid(column=1, row=1, pady=12, padx=20)
+
+# Left_Menu2
+MenuBttn = Menubutton(frame_left, text="MEDICINES", font=("Helvetica", 11, "bold"), bg="#50aba5", width=23)
+
+Menu2 = Menu(MenuBttn, tearoff=0)
+
+Menu2.add_command(label="   Add Medicine    ", font=("Helvetica", 11, "bold"), command=call_addmedicine)
+Menu2.add_separator()
+Menu2.add_command(label="   Medicine List   ", font=("Helvetica", 11, "bold"), command=call_viewmedicine)
+
+MenuBttn["menu"] = Menu2
+MenuBttn.grid(column=1, row=2, pady=12, padx=20)
+
+# Left_Menu3
+MenuBttn = Menubutton(frame_left, text="CUSTOMERS", font=("Helvetica", 11, "bold"), bg="#50aba5", width=23)
+
+Menu3 = Menu(MenuBttn, tearoff=0)
+
+Menu3.add_command(label="       Customer List       ", font=("Helvetica", 11, "bold"), command=call_viewcustomer)
+
+MenuBttn["menu"] = Menu3
+MenuBttn.grid(column=1, row=3, pady=12, padx=20)
+
+# Left_Menu4
+MenuBttn = Menubutton(frame_left, text="SUPPLIERS", font=("Helvetica", 11, "bold"), bg="#50aba5", width=23)
+
+Menu4 = Menu(MenuBttn, tearoff=0)
+
+Menu4.add_command(label="       Supplier List       ", font=("Helvetica", 11, "bold"), command=call_viewsupplier)
+
+MenuBttn["menu"] = Menu4
+MenuBttn.grid(column=1, row=4, pady=12, padx=20)
+
+# Left_Menu5
+MenuBttn = Menubutton(frame_left, text="SALES", font=("Helvetica", 11, "bold"), bg="#50aba5", width=23)
+
+Menu5 = Menu(MenuBttn, tearoff=0)
+
+Menu5.add_command(label="       Add Sales     ", font=("Helvetica", 11, "bold"), command=call_addsales)
+Menu5.add_separator()
+Menu5.add_command(label="       View Sales    ", font=("Helvetica", 11, "bold"), command=call_viewsales)
+
+MenuBttn["menu"] = Menu5
+MenuBttn.grid(column=1, row=5, pady=12, padx=20)
+
+# Left_Menu6
+MenuBttn = Menubutton(frame_left, text="PURCHASES", font=("Helvetica", 11, "bold"), bg="#50aba5", width=23)
+
+Menu6 = Menu(MenuBttn, tearoff=0)
+
+Menu6.add_command(label="   Add Purchase   ", font=("Helvetica", 11, "bold"), command=call_addpurchase)
+Menu6.add_separator()
+Menu6.add_command(label="  View Purchases  ", font=("Helvetica", 11, "bold"), command=call_viewpurchase)
+
+MenuBttn["menu"] = Menu6
+MenuBttn.grid(column=1, row=6, pady=12, padx=20)
+
+# --------------------------------------------------------------------
+# Right Frame
+
+heading = Label(frame_right, text=" Add Admin ", font=("Times New Roman", 20, "bold"),  fg="White", bg="#285e5a")
 heading.grid(padx=305, pady=40)
 
 Label(frame_right, text="Name", font=("Times New Roman", 18, "bold"), bg="#c9d6d5").place(x=200, y=100)
@@ -94,12 +233,14 @@ def add_admin():
     phone = add_phone.get()
     email = add_email.get()
 
-    sql = "INSERT INTO admin(ad_usname,ad_pass,ad_name,ad_phn,ad_email) VALUES (%s, %s, %s, %s, %s)"
-    mycur.execute(sql, [username, password, name, phone, email])
-    db.commit()
-
-    print(mycur.rowcount, "record inserted.")
-
+    try:
+        sql = "INSERT INTO admin(ad_usname,ad_pass,ad_name,ad_phn,ad_email) VALUES (%s, %s, %s, %s, %s)"
+        mycur.execute(sql, [username, password, name, phone, email])
+        db.commit()
+        print(mycur.rowcount, "record inserted.")
+    except Exception as e:
+        print(e)
+        db.rollback()
 
 def cancel_clicked():
     """ callback when the cancel button clicked
@@ -119,11 +260,11 @@ def clear_fileds():
     e5.delete(0, END)
 
 
-cancel = Button(frame_right, text="CANCEL", font=("Verdana 13", 13, "bold"), bg="#50aba5", border=2, cursor="hand2",
+cancel = Button(frame_right, text="CANCEL", font=("Verdana 13", 13, "bold"), width=9, bg="#50aba5", border=2, cursor="hand2",
                 command=lambda: [cancel_clicked(), clear_fileds()])
 cancel.place(x=270, y=365, height=30)
 
-submit = Button(frame_right, text="SUBMIT", font=("Verdana 13", 13, "bold"), bg="#50aba5", border=2, cursor="hand2",
+submit = Button(frame_right, text="SUBMIT", font=("Verdana 13", 13, "bold"), width=9, bg="#50aba5", border=2, cursor="hand2",
                 command=lambda: [add_admin(), submit_clicked(), clear_fileds()])
 submit.place(x=400, y=365, height=30)
 

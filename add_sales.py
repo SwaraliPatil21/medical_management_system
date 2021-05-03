@@ -2,6 +2,7 @@ import tkinter as tk
 from tkinter import *
 import tkinter.ttk as ttk
 import MySQLdb
+import os
 import datetime
 
 # connecting_to_the_database
@@ -28,10 +29,151 @@ root.grid_columnconfigure(0, weight=1)
 frame_top.grid(row=0, sticky="ew")
 frame_left.grid(row=1, sticky="w")
 frame_right.grid(row=1, sticky="e")
-frame_right.grid_propagate(False)
-
 frame_top.grid_rowconfigure(1, weight=1)
 frame_top.grid_columnconfigure(0, weight=1)
+
+frame_top.grid_propagate(False)
+frame_right.grid_propagate(False)
+frame_left.grid_propagate(False)
+
+# -------------------------------------------------------------------------------------------------------------
+# top frame
+
+# Scrollable Text
+svar = tk.StringVar()
+Scrollable_text = tk.Label(frame_top, textvariable=svar, height=1, width=200, font=("Helvetica", 14, "bold"), fg="White", bg="#285e5a")
+
+def shif():
+    deli = 195
+    shif.msg = shif.msg[1:] + shif.msg[0]
+    svar.set(shif.msg)
+    root.after(deli, shif)
+
+shif.msg = '  Welcome  To  Medical  Store  Management  System!  Wear  Mask,  Stay  Safe!!  '
+shif()
+Scrollable_text.grid(column=0, row=1, pady=12, padx=50)
+
+# -------------------------------------------------------------------------------------------------------------
+# left dashboard
+
+# calling pages
+def call_dashboard():
+    root.destroy()
+    os.system('python3 dashboard.py')
+
+def call_addadmin():
+    root.destroy()
+    os.system('python3 add_admin.py')
+
+def call_viewadmin():
+    root.destroy()
+    os.system('python3 view_admin.py')
+
+def call_addmedicine():
+    root.destroy()
+    os.system('python3 add_medicine.py')
+
+def call_viewmedicine():
+    root.destroy()
+    os.system('python3 view_medicines.py')
+
+def call_viewcustomer():
+    root.destroy()
+    os.system('python3 view_customer.py')
+
+def call_viewsupplier():
+    root.destroy()
+    os.system('python3 view_supplier.py')
+
+def call_viewsales():
+    root.destroy()
+    os.system('python3 view_sales.py')
+
+def call_addpurchase():
+    root.destroy()
+    os.system('python3 add_purchase.py')
+
+def call_viewpurchase():
+    root.destroy()
+    os.system('python3 view_purchase.py')
+
+
+# Left_button_Dashboard
+dashoboard = Button(frame_left, text="DASHBOARD", font=("Helvetica", 11, "bold"), command=call_dashboard,
+                    bg="#50aba5", width=21)
+dashoboard.grid(column=1, row=0, pady=12, padx=20)
+
+
+# Left_Menu1
+MenuBttn = Menubutton(frame_left, text="ADMIN", font=("Helvetica", 11, "bold"), bg="#50aba5", width=23)
+
+Menu1 = Menu(MenuBttn, tearoff=0)
+
+Menu1.add_command(label="       Add Admin       ", font=("Helvetica", 11, "bold"), command=call_addadmin)
+Menu1.add_separator()
+Menu1.add_command(label="       Admin List      ", font=("Helvetica", 11, "bold"), command=call_viewadmin)
+
+MenuBttn["menu"] = Menu1
+MenuBttn.grid(column=1, row=1, pady=12, padx=20)
+
+# Left_Menu2
+MenuBttn = Menubutton(frame_left, text="MEDICINES", font=("Helvetica", 11, "bold"), bg="#50aba5", width=23)
+
+Menu2 = Menu(MenuBttn, tearoff=0)
+
+Menu2.add_command(label="   Add Medicine    ", font=("Helvetica", 11, "bold"), command=call_addmedicine)
+Menu2.add_separator()
+Menu2.add_command(label="   Medicine List   ", font=("Helvetica", 11, "bold"), command=call_viewmedicine)
+
+MenuBttn["menu"] = Menu2
+MenuBttn.grid(column=1, row=2, pady=12, padx=20)
+
+# Left_Menu3
+MenuBttn = Menubutton(frame_left, text="CUSTOMERS", font=("Helvetica", 11, "bold"), bg="#50aba5", width=23)
+
+Menu3 = Menu(MenuBttn, tearoff=0)
+
+Menu3.add_command(label="       Customer List       ", font=("Helvetica", 11, "bold"), command=call_viewcustomer)
+
+MenuBttn["menu"] = Menu3
+MenuBttn.grid(column=1, row=3, pady=12, padx=20)
+
+# Left_Menu4
+MenuBttn = Menubutton(frame_left, text="SUPPLIERS", font=("Helvetica", 11, "bold"), bg="#50aba5", width=23)
+
+Menu4 = Menu(MenuBttn, tearoff=0)
+
+Menu4.add_command(label="       Supplier List       ", font=("Helvetica", 11, "bold"), command=call_viewsupplier)
+
+MenuBttn["menu"] = Menu4
+MenuBttn.grid(column=1, row=4, pady=12, padx=20)
+
+# Left_Menu5
+MenuBttn = Menubutton(frame_left, text="SALES", font=("Helvetica", 11, "bold"), bg="#50aba5", width=23)
+
+Menu5 = Menu(MenuBttn, tearoff=0)
+
+Menu5.add_command(label="       Add Sales     ", font=("Helvetica", 11, "bold"))
+Menu5.add_separator()
+Menu5.add_command(label="       View Sales    ", font=("Helvetica", 11, "bold"), command=call_viewsales)
+
+MenuBttn["menu"] = Menu5
+MenuBttn.grid(column=1, row=5, pady=12, padx=20)
+
+# Left_Menu6
+MenuBttn = Menubutton(frame_left, text="PURCHASES", font=("Helvetica", 11, "bold"), bg="#50aba5", width=23)
+
+Menu6 = Menu(MenuBttn, tearoff=0)
+
+Menu6.add_command(label="   Add Purchase   ", font=("Helvetica", 11, "bold"), command=call_addpurchase)
+Menu6.add_separator()
+Menu6.add_command(label="  View Purchases  ", font=("Helvetica", 11, "bold"), command=call_viewpurchase)
+
+MenuBttn["menu"] = Menu6
+MenuBttn.grid(column=1, row=6, pady=12, padx=20)
+
+# --------------------------------------------------------------------
+# Right Frame
 
 # customer
 customer = Label(frame_right, text="Customer ", font=("Times New Roman", 15, "bold"), bg="#c9d6d5")
@@ -41,18 +183,23 @@ def comando(event):
     print(customer_value.get())
 
 # dropdown for customer
-mycur = db.cursor()
-mycur.execute("SELECT cust_name FROM customer")
-myresult = mycur.fetchall()
+try:
+    mycur = db.cursor()
+    mycur.execute("SELECT cust_name FROM customer")
+    myresult = mycur.fetchall()
 
-customer_value = tk.StringVar()
+    customer_value = tk.StringVar()
 
-customer_cb = ttk.Combobox(frame_right, textvariable=customer_value)
-customer_cb['values'] = myresult
-# customer_cb['state'] = 'readonly'  # normal
-customer_cb.place(x=106, y=9, height=25, width=160)
+    customer_cb = ttk.Combobox(frame_right, textvariable=customer_value)
+    customer_cb['values'] = myresult
+    customer_cb['state'] = 'readonly'  # normal
+    customer_cb.place(x=106, y=9, height=25, width=160)
 
-customer_cb.bind('<<ComboboxSelected>>', comando)
+    customer_cb.bind('<<ComboboxSelected>>', comando)
+except Exception as e:
+    print(e)
+    db.rollback()
+
 
 # Current Date
 curr_date = Label(frame_right, text="Date ", font=("Times New Roman", 15, "bold"), bg="#c9d6d5")
@@ -112,12 +259,17 @@ def cust_add():
     city = add_city.get()
     email = add_email.get()
 
-    sql = "INSERT INTO customer(cust_name, cust_phn, cust_city, cust_email) VALUES (%s, %s, %s, %s)"
-    mycur.execute(sql, [(name), (phone), (city), (email)])
-    db.commit()
+    try:
+        sql = "INSERT INTO customer(cust_name, cust_phn, cust_city, cust_email) VALUES (%s, %s, %s, %s)"
+        mycur.execute(sql, [(name), (phone), (city), (email)])
+        db.commit()
 
-    print(mycur.rowcount, "record inserted.")
-    cust_destroy()
+        print(mycur.rowcount, "record inserted.")
+        cust_destroy()
+
+    except Exception as e:
+        print(e)
+        db.rollback()
 
 
 def cust_destroy():
