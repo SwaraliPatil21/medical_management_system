@@ -1,7 +1,7 @@
 from tkinter import *
 import tkinter as tk
 import tkinter.ttk as ttk
-from tkinter.messagebox import showinfo
+from tkinter import messagebox as mb
 from tkinter.messagebox import *
 import MySQLdb
 import os
@@ -177,19 +177,22 @@ MenuBttn.grid(column=1, row=6, pady=12, padx=20)
 
 # --------------------------------------------------------------------------------------------------------------------
 # Right_frame
+global add_name
+global add_comp
+global add_price
+global add_qty
+add_name = tk.StringVar()
+add_comp = tk.StringVar()
+add_price = tk.StringVar()
+add_qty = tk.StringVar()
 
 # label for medicine list
 med_list = Label(frame_right, text=" Medicine List ", font=("Times New Roman", 20, "bold"), fg="White", bg="#285e5a")
-med_list.place(x=28, y=30, height=38, width=200)
+med_list.place(x=265, y=30, height=30, width=200)
 
-# Search-button
-global med_verify
-med_verify = StringVar()
-Label(frame_right, text="Search :", font=("Times New Roman", 19, "bold"), bg="#c9d6d5").place(x=400, y=70)
-Entry(frame_right, textvariable=med_verify, font="Verdana 13").place(x=500, y=75, height=26, width=200)
 
 # columns
-columns = ('#1', '#2', '#3', '#4', '#5')
+columns = ('#1', '#2', '#3', '#4','#5')
 
 tree = ttk.Treeview(frame_right, selectmode="extended", columns=columns, show='headings')
 style = ttk.Style()
@@ -200,29 +203,30 @@ style.configure(".", font=('Helvetica', 11), foreground="Black")
 style.configure('.', rowheight=25)
 
 # define headings and column length
-tree.heading('#1', text='Medicine Name', anchor=W)
-tree.column('#1', minwidth=50, width=160, stretch=0)
+tree.heading('#1', text='Med Id', anchor=W)
+tree.column('#1', minwidth=30, width=70, stretch=0)
 
-tree.heading('#2', text='Company Name', anchor=W)
-tree.column('#2', minwidth=100, width=230, stretch=0)
+tree.heading('#2', text='Medicine Name', anchor=W)
+tree.column('#2', minwidth=50, width=170, stretch=0)
 
-tree.heading('#3', text='Unit Price', anchor=W)
-tree.column('#3', minwidth=70, width=100, stretch=0)
+tree.heading('#3', text='Company Name', anchor=W)
+tree.column('#3', minwidth=100, width=230, stretch=0)
 
-tree.heading('#4', text='Quantity', anchor=W)
-tree.column('#4', minwidth=100, width=95, stretch=0)
+tree.heading('#4', text='Unit Price', anchor=W)
+tree.column('#4', minwidth=70, width=100, stretch=0)
 
-tree.heading('#5', text='Action', anchor=W)
-tree.column('#5', minwidth=100, width=90, stretch=0)
+tree.heading('#5', text='Quantity', anchor=W)
+tree.column('#5', minwidth=100, width=95, stretch=0)
+
 
 # add Sql data to treeview
 try:
-    mycur.execute("SELECT med_name,med_comp,med_price,SUM(curr_qty) "
-                  "FROM `med_details` as A LEFT join med_batch_details as B ON A.med_id = B.med_id "
-                  "GROUP by med_name,med_comp,med_price")
+    mycur.execute("SELECT A.med_id ,med_name,med_comp,med_price,SUM(curr_qty) "
+                  "FROM `med_details` as A LEFT join med_batch_details as B "
+                  "ON A.med_id = B.med_id GROUP by A.med_id")
     fetch = mycur.fetchall()
     for data in fetch:
-        tree.insert('', 'end', values=(data[0], data[1], data[2], data[3]))
+        tree.insert('', 'end', values=(data[0], data[1], data[2], data[3], data[4]))
 except Exception as e:
     print(e)
     db.rollback()
@@ -235,9 +239,6 @@ def item_selected(event):
         item = tree.item(selected_item)
         # list
         record = item['values']
-        #
-        showinfo(title='Information',
-                 message=', '.join(map(str, record)))
 
 
 # to stop column movement
@@ -249,11 +250,101 @@ def handle_click(event):
 tree.bind('<Button-1>', handle_click)
 tree.bind('<<TreeviewSelect>>', item_selected)
 
-tree.grid(padx=20, pady=120)
+tree.grid(padx=20, pady=80)
 
 # add a scrollbar
 scrollbar = ttk.Scrollbar(frame_right, orient=tk.VERTICAL, command=tree.yview)
 tree.configure(yscroll=scrollbar.set)
-scrollbar.grid(row=0, column=1, sticky='ns', pady=120)
+scrollbar.grid(row=0, column=1, sticky='ns', pady=80)
+
+# delete_table_selection
+deletebutton = tk.Button(frame_right, text="DELETE", command=lambda: (delete_data(tree), item_selected))
+deletebutton.configure(font=('Verdana', 12, 'bold'), bg="#318781", cursor="hand2")
+deletebutton.place(x=250, y=375)
+
+
+def delete_data(tree):
+    try:
+        selected_item = tree.selection()[0]
+        print(tree.item(selected_item)['values'])
+        uid = tree.item(selected_item)['values'][0]
+        del_query = "DELETE FROM med_details WHERE med_id=%s"
+        sel_data = (uid,)
+        mycur.execute(del_query, sel_data)
+        db.commit()
+        tree.delete(selected_item)
+    except Exception as e:
+        print(e)
+        db.rollback()
+    mb.showinfo("success", "MEDICINE data deleted!")
+
+
+
+# Update_table_selection
+updatebutton = tk.Button(frame_right, text="EDIT", command=lambda: (select_data(tree)))
+updatebutton.configure(font=('Verdana', 12, 'bold'), bg="#318781", cursor="hand2")
+updatebutton.place(x=420, y=375)
+
+
+def select_data(tree):
+    f = Toplevel(root, bg="#c5dedd")
+    f.title("Modify Details")
+    f.geometry('{}x{}+635+220'.format(370, 260))
+    curItem = tree.focus()
+    values = tree.item(curItem, "values")
+    print(values)
+
+    head = Label(f, text="Update Medicine",width=15, font=("Times New Roman", 14, "bold"), fg="White", bg="#285e5a")
+    head.place(x=110, y=20)
+
+    l1 = Label(f, text="Name",font=("Times New Roman", 14, "bold"), bg="#c5dedd")
+    l1.place(x=55, y=70)
+    e1 = Entry(f, textvariable=add_name, width=17, font="Verdana 11")
+    e1.place(x=150, y=70)
+    e1.delete(0, END)
+
+    l2 = Label(f, text="Company", font=("Times New Roman", 14, "bold"), bg="#c5dedd")
+    l2.place(x=55, y=110)
+    e2 = Entry(f, textvariable=add_comp, width=17, font="Verdana 11")
+    e2.place(x=150, y=110)
+    e2.delete(0, END)
+
+    l3 = Label(f, text="Price", font=("Times New Roman", 14, "bold"), bg="#c5dedd")
+    l3.place(x=55, y=150)
+    e3 = Entry(f, textvariable=add_price, width=17, font="Verdana 11")
+    e3.place(x=150, y=150)
+    e3.delete(0, END)
+
+
+    e1.insert(0, (values[1]))
+    e2.insert(0, (values[2]))
+    e3.insert(0, (values[3]))
+
+    def update_data():
+        # nonlocal e1, e2, e3, curItem, values
+        try:
+            e1 = add_name.get()
+            e2 = add_comp.get()
+            e3 = add_price.get()
+            # e4 = add_qty.get()
+            tree.item(curItem, values=(values[0], e1, e2, e3))
+            print("Medicine id",values[0])
+            mycur.execute("UPDATE med_details SET med_name=%s, med_comp=%s, med_price=%s WHERE med_id=%s",
+                          (e1, e2, e3, values[0]))
+            db.commit()
+        except Exception as e:
+            print(e)
+            db.rollback()
+        mb.showinfo("Success", "Admin data Updated")
+        f.destroy()
+
+    cancelbutton = tk.Button(f, text="CANCEL",font=("Times New Roman", 12, "bold"), bg="#50aba5", width=8,
+                             command=f.destroy)
+    cancelbutton.place(x=100, y=200)
+    savebutton = tk.Button(f, text="SAVE",font=("Times New Roman", 12, "bold"), bg="#50aba5", width=8,
+                            command=update_data)
+    savebutton.place(x=200, y=200)
+
+
 
 root.mainloop()

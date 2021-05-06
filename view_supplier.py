@@ -2,6 +2,7 @@ import tkinter as tk
 from tkinter import *
 import tkinter.ttk as ttk
 from tkinter.messagebox import showinfo
+from tkinter import messagebox as mb
 import MySQLdb
 import os
 
@@ -11,7 +12,7 @@ mycur = db.cursor()
 
 root = Tk()
 root.title('supplier list')
-root.geometry('{}x{}'.format(1000, 500))
+root.geometry('{}x{}+200+100'.format(1000, 500))
 root.resizable('false', 'false')
 
 #frames
@@ -183,9 +184,20 @@ MenuBttn.grid(column=1, row=6, pady=12, padx=20)
 # --------------------------------------------------------------------------------------------------------------------
 # Right_frame
 
+global add_name
+global add_phone
+global add_email
+global add_agencyname
+global add_addr
+add_agencyname = tk.StringVar()
+add_name = tk.StringVar()
+add_phone = tk.StringVar()
+add_email = tk.StringVar()
+add_addr = tk.StringVar()
+
 # Label Heading
 heading = Label(frame_right, text="   Supplier List   ", font=("Times New Roman", 20, "bold"), fg="White", bg="#285e5a")
-heading.place(x=278, y=42, height=40, width=180)
+heading.place(x=278, y=30, height=35, width=180)
 
 # columns
 columns = ('#1', '#2', '#3', '#4', '#5', '#6')
@@ -235,9 +247,6 @@ def item_selected(event):
         item = tree.item(selected_item)
         # list
         record = item['values']
-        #
-        showinfo(title='Information',
-                message=','.join(map(str,record)))
 
 #to stop column movement
 def handle_click(event):
@@ -247,11 +256,116 @@ tree.bind('<Button-1>', handle_click)
 
 tree.bind('<<TreeviewSelect>>', item_selected)
 
-tree.grid(padx=10, pady=100)
+tree.grid(padx=10, pady=80)
 
 # add a scrollbar
 scrollbar = ttk.Scrollbar(frame_right, orient=tk.VERTICAL, command=tree.yview)
 tree.configure(yscroll=scrollbar.set)
-scrollbar.grid(row=0, column=1, sticky='ns', pady=100)
+scrollbar.grid(row=0, column=1, sticky='ns', pady=80)
+
+# delete_table_selection
+deletebutton = tk.Button(frame_right, text="DELETE", command=lambda: (delete_data(tree), item_selected))
+deletebutton.configure(font=('Verdana', 12, 'bold'), bg="#318781", cursor="hand2")
+deletebutton.place(x=250, y=375)
+
+
+def delete_data(tree):
+    try:
+        selected_item = tree.selection()[0]
+        print(tree.item(selected_item)['values'])
+        uid = tree.item(selected_item)['values'][0]
+        del_query = "DELETE FROM supplier WHERE sup_id=%s"
+        sel_data = (uid,)
+        mycur.execute(del_query, sel_data)
+        db.commit()
+        tree.delete(selected_item)
+    except Exception as e:
+        print(e)
+        db.rollback()
+    mb.showinfo("success", "SUPPLIER data deleted!")
+
+
+
+# Update_table_selection
+updatebutton = tk.Button(frame_right, text="EDIT", command=lambda: (select_data(tree)))
+updatebutton.configure(font=('Verdana', 12, 'bold'), bg="#318781", cursor="hand2")
+updatebutton.place(x=420, y=375)
+
+
+def select_data(tree):
+    f = Toplevel(root, bg="#c5dedd")
+    f.title("Modify Details")
+    f.geometry('{}x{}+635+190'.format(370, 350))
+    curItem = tree.focus()
+    values = tree.item(curItem, "values")
+    print(values)
+
+    head = Label(f, text="Update Supplier",width=15, font=("Times New Roman", 14, "bold"), fg="White", bg="#285e5a")
+    head.place(x=110, y=20)
+
+    l1 = Label(f, text="Agency"'\n'"Name",font=("Times New Roman", 14, "bold"), bg="#c5dedd")
+    l1.place(x=55, y=65)
+    e1 = Entry(f, textvariable=add_agencyname, width=17, font="Verdana 11")
+    e1.place(x=130, y=68)
+    e1.delete(0, END)
+
+    l2 = Label(f, text="Name", font=("Times New Roman", 14, "bold"), bg="#c5dedd")
+    l2.place(x=55, y=120)
+    e2 = Entry(f, textvariable=add_name, width=17, font="Verdana 11")
+    e2.place(x=130, y=120)
+    e2.delete(0, END)
+
+    l3 = Label(f, text="Phone", font=("Times New Roman", 14, "bold"), bg="#c5dedd")
+    l3.place(x=55, y=160)
+    e3 = Entry(f, textvariable=add_phone, width=17, font="Verdana 11")
+    e3.place(x=130, y=160)
+    e3.delete(0, END)
+
+    l4 = Label(f, text="Email", font=("Times New Roman", 14, "bold"), bg="#c5dedd")
+    l4.place(x=55, y=200)
+    e4 = Entry(f, textvariable=add_email, width=17, font="Verdana 11")
+    e4.place(x=130, y=200)
+    e4.delete(0, END)
+
+    l5 = Label(f, text="Address", font=("Times New Roman", 14, "bold"), bg="#c5dedd")
+    l5.place(x=55, y=240)
+    e5 = Entry(f, textvariable=add_addr, width=17, font="Verdana 11")
+    e5.place(x=130, y=240)
+    e5.delete(0, END)
+
+
+    e1.insert(0, (values[1]))
+    e2.insert(0, (values[2]))
+    e3.insert(0, (values[3]))
+    e4.insert(0, (values[4]))
+    e5.insert(0, (values[5]))
+
+    def update_data():
+        # nonlocal e1, e2, e3, curItem, values
+        try:
+            e1 = add_agencyname.get()
+            e2 = add_name.get()
+            e3 = add_phone.get()
+            e4 = add_email.get()
+            e5 = add_addr.get()
+            tree.item(curItem, values=(values[0], e1, e2, e3, e4, e5))
+            print("Supplier id",values[0])
+            mycur.execute("UPDATE supplier SET sup_agency=%s, sup_name=%s, sup_phn=%s, sup_email=%s, sup_addr=%s, WHERE sup_id=%s",
+                          (e1, e2, e3, e4, e5, values[0]))
+            db.commit()
+        except Exception as e:
+            print(e)
+            db.rollback()
+        mb.showinfo("Success", "Admin data Updated")
+        f.destroy()
+
+    cancelbutton = tk.Button(f, text="CANCEL",font=("Times New Roman", 12, "bold"), bg="#50aba5", width=8,
+                             command=f.destroy)
+    cancelbutton.place(x=100, y=290)
+    savebutton = tk.Button(f, text="SAVE",font=("Times New Roman", 12, "bold"), bg="#50aba5", width=8,
+                            command=update_data)
+    savebutton.place(x=200, y=290)
+
+
 
 root.mainloop()

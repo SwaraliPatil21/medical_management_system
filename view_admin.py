@@ -1,7 +1,7 @@
 import tkinter as tk
 from tkinter import *
 import tkinter.ttk as ttk
-from tkinter.messagebox import *
+from tkinter import messagebox as mb
 import MySQLdb
 import os
 
@@ -179,9 +179,16 @@ MenuBttn.grid(column=1, row=6, pady=12, padx=20)
 # --------------------------------------------------------------------------------------------------------------------
 # Right_frame
 
+global add_name
+global add_phone
+global add_email
+add_name = tk.StringVar()
+add_phone = tk.StringVar()
+add_email = tk.StringVar()
+
 # label for admin list
-med_list = Label(frame_right, text=" Admin List ", font=("Times New Roman", 22, "bold"), fg="White", bg="#285e5a")
-med_list.place(x=32, y=30, height=38, width=250)
+admin_list = Label(frame_right, text=" Admin List ", font=("Times New Roman", 20, "bold"), fg="White", bg="#285e5a")
+admin_list.place(x=250, y=24, height=35, width=200)
 
 # columns
 columns = ('#1', '#2', '#3', '#4')
@@ -227,21 +234,112 @@ def item_selected(event):
         record = item['values']
         print(record)
 
+
 #to stop column movement
 def handle_click(event):
     if tree.identify_region(event.x, event.y) == "separator":
         return "break"
-tree.bind('<Button-1>', handle_click)
 
+
+
+
+tree.bind('<Button-1>', handle_click)
 tree.bind('<<TreeviewSelect>>', item_selected)
 
-tree.grid(padx=20, pady=120)
-
+tree.grid(padx=20, pady=80)
 
 # add a scrollbar
 scrollbar = ttk.Scrollbar(frame_right, orient=tk.VERTICAL, command=tree.yview)
 tree.configure(yscroll=scrollbar.set)
-scrollbar.grid(row=0, column=1, sticky='ns', pady=120)
+scrollbar.grid(row=0, column=1, sticky='ns', pady=80)
+
+# delete_table_selection
+deletebutton = tk.Button(frame_right, text="DELETE", command=lambda: (delete_data(tree), item_selected))
+deletebutton.configure(font=('Verdana', 12, 'bold'), bg="#318781", cursor="hand2")
+deletebutton.place(x=250, y=375)
+
+
+def delete_data(tree):
+    try:
+        selected_item = tree.selection()[0]
+        print(tree.item(selected_item)['values'])
+        uid = tree.item(selected_item)['values'][0]
+        del_query = "DELETE FROM admin WHERE ad_id=%s"
+        sel_data = (uid,)
+        mycur.execute(del_query, sel_data)
+        db.commit()
+        tree.delete(selected_item)
+    except Exception as e:
+        print(e)
+        db.rollback()
+    mb.showinfo("success", "ADMIN data deleted!")
+
+
+
+# Update_table_selection
+updatebutton = tk.Button(frame_right, text="EDIT", command=lambda: (select_data(tree)))
+updatebutton.configure(font=('Verdana', 12, 'bold'), bg="#318781", cursor="hand2")
+updatebutton.place(x=420, y=375)
+
+
+def select_data(tree):
+    f = Toplevel(root, bg="#c5dedd")
+    f.title("Modify Details")
+    f.geometry('{}x{}+635+220'.format(370, 300))
+    curItem = tree.focus()
+    values = tree.item(curItem, "values")
+    print(values)
+
+    head = Label(f, text="Update Admin",width=15, font=("Times New Roman", 14, "bold"), fg="White", bg="#285e5a")
+    head.place(x=110, y=20)
+
+    l1 = Label(f, text="Name",font=("Times New Roman", 14, "bold"), bg="#c5dedd")
+    l1.place(x=55, y=80)
+    e1 = Entry(f, textvariable=add_name, width=17, font="Verdana 11")
+    e1.place(x=130, y=80)
+    e1.delete(0, END)
+
+    l2 = Label(f, text="Phone", font=("Times New Roman", 14, "bold"), bg="#c5dedd")
+    l2.place(x=55, y=125)
+    e2 = Entry(f, textvariable=add_phone, width=17, font="Verdana 11")
+    e2.place(x=130, y=125)
+    e2.delete(0, END)
+
+    l3 = Label(f, text="Email", font=("Times New Roman", 14, "bold"), bg="#c5dedd")
+    l3.place(x=55, y=170)
+    e3 = Entry(f, textvariable=add_email, width=17, font="Verdana 11")
+    e3.place(x=130, y=170)
+    e3.delete(0, END)
+    e1.insert(0, (values[1]))
+    e2.insert(0, (values[2]))
+    e3.insert(0, (values[3]))
+
+    def update_data():
+        nonlocal e1, e2, e3, curItem, values
+        try:
+            e1 = add_name.get()
+            e2 = add_phone.get()
+            e3 = add_email.get()
+            tree.item(curItem, values=(values[0], e1, e2, e3))
+            print("Admin id",values[0])
+            mycur.execute("UPDATE admin SET ad_name=%s, ad_phn=%s, ad_email=%s WHERE ad_id=%s",
+                          (e1, e2, e3, values[0]))
+            db.commit()
+        except Exception as e:
+            print(e)
+            db.rollback()
+        mb.showinfo("Success", "Admin data Updated")
+        f.destroy()
+
+    cancelbutton = tk.Button(f, text="CANCEL",font=("Times New Roman", 12, "bold"), bg="#50aba5", width=8,
+                             command=f.destroy)
+    cancelbutton.place(x=100, y=230)
+    savebutton = tk.Button(f, text="SAVE",font=("Times New Roman", 12, "bold"), bg="#50aba5", width=8,
+                            command=update_data)
+    savebutton.place(x=200, y=230)
+
+
+
 
 
 
