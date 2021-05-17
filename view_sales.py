@@ -1,6 +1,7 @@
 import tkinter as tk
 from tkinter import *
 import tkinter.ttk as ttk
+from tkinter import messagebox as mb
 from tkinter.messagebox import showinfo
 import MySQLdb
 import os
@@ -117,9 +118,9 @@ dashoboard.grid(column=1, row=0, pady=12, padx=20)
 MenuBttn = Menubutton(frame_left, text="ADMIN", font=("Helvetica", 11, "bold"), bg="#50aba5", width=23)
 
 Menu1 = Menu(MenuBttn, tearoff=0)
-Menu1.add_command(label="       Add Admin       ", font=("Helvetica", 11), command=call_addadmin)
+Menu1.add_command(label="           Add Admin        ", font=("Helvetica", 11, "bold"), command=call_addadmin)
 Menu1.add_separator()
-Menu1.add_command(label="       Admin List      ", font=("Helvetica", 11), command=call_viewadmin)
+Menu1.add_command(label="           Admin List       ", font=("Helvetica", 11, "bold"), command=call_viewadmin)
 
 MenuBttn["menu"] = Menu1
 MenuBttn.grid(column=1, row=1, pady=12, padx=20)
@@ -128,9 +129,9 @@ MenuBttn.grid(column=1, row=1, pady=12, padx=20)
 MenuBttn = Menubutton(frame_left, text="MEDICINES", font=("Helvetica", 11, "bold"), bg="#50aba5", width=23)
 
 Menu2 = Menu(MenuBttn, tearoff=0)
-Menu2.add_command(label="   Add Medicine    ", font=("Helvetica", 11), command=call_addmedicine)
+Menu2.add_command(label="       Add Medicine      ", font=("Helvetica", 11, "bold"), command=call_addmedicine)
 Menu2.add_separator()
-Menu2.add_command(label="   Medicine List   ", font=("Helvetica", 11), command=call_viewmedicine)
+Menu2.add_command(label="       Medicine List      ", font=("Helvetica", 11, "bold"), command=call_viewmedicine)
 
 MenuBttn["menu"] = Menu2
 MenuBttn.grid(column=1, row=2, pady=12, padx=20)
@@ -139,7 +140,7 @@ MenuBttn.grid(column=1, row=2, pady=12, padx=20)
 MenuBttn = Menubutton(frame_left, text="CUSTOMERS", font=("Helvetica", 11, "bold"), bg="#50aba5", width=23)
 
 Menu3 = Menu(MenuBttn, tearoff=0)
-Menu3.add_command(label="       Customer List       ", font=("Helvetica", 11), command=call_viewcustomer)
+Menu3.add_command(label="       Customer List      ", font=("Helvetica", 11, "bold"), command=call_viewcustomer)
 
 MenuBttn["menu"] = Menu3
 MenuBttn.grid(column=1, row=3, pady=12, padx=20)
@@ -148,7 +149,7 @@ MenuBttn.grid(column=1, row=3, pady=12, padx=20)
 MenuBttn = Menubutton(frame_left, text="SUPPLIERS", font=("Helvetica", 11, "bold"), bg="#50aba5", width=23)
 
 Menu4 = Menu(MenuBttn, tearoff=0)
-Menu4.add_command(label="       Supplier List       ", font=("Helvetica", 11), command=call_viewsupplier)
+Menu4.add_command(label="        Supplier List       ", font=("Helvetica", 11, "bold"), command=call_viewsupplier)
 
 MenuBttn["menu"] = Menu4
 MenuBttn.grid(column=1, row=4, pady=12, padx=20)
@@ -157,9 +158,9 @@ MenuBttn.grid(column=1, row=4, pady=12, padx=20)
 MenuBttn = Menubutton(frame_left, text="SALES", font=("Helvetica", 11, "bold"), bg="#50aba5", width=23)
 
 Menu5 = Menu(MenuBttn, tearoff=0)
-Menu5.add_command(label="       Add Sales     ", font=("Helvetica", 11), command=call_addsales)
+Menu5.add_command(label="          Add Sales     ", font=("Helvetica", 11, "bold"), command=call_addsales)
 Menu5.add_separator()
-Menu5.add_command(label="       View Sales    ", font=("Helvetica", 11), command=call_viewsales)
+Menu5.add_command(label="         View Sales         ", font=("Helvetica", 11, "bold"), command=call_viewsales)
 
 MenuBttn["menu"] = Menu5
 MenuBttn.grid(column=1, row=5, pady=12, padx=20)
@@ -168,9 +169,9 @@ MenuBttn.grid(column=1, row=5, pady=12, padx=20)
 MenuBttn = Menubutton(frame_left, text="PURCHASES", font=("Helvetica", 11, "bold"), bg="#50aba5", width=23)
 
 Menu6 = Menu(MenuBttn, tearoff=0)
-Menu6.add_command(label="   Add Purchase    ", font=("Helvetica", 11), command=call_addpurchase)
+Menu6.add_command(label="     Add Purchase      ", font=("Helvetica", 11, "bold"), command=call_addpurchase)
 Menu6.add_separator()
-Menu6.add_command(label="   View Purchases  ", font=("Helvetica", 11))
+Menu6.add_command(label="     View Purchases    ", font=("Helvetica", 11, "bold"))
 
 MenuBttn["menu"] = Menu6
 MenuBttn.grid(column=1, row=6, pady=12, padx=20)
@@ -187,38 +188,56 @@ def search():
     med_price = m_price.get()
 
     try:
+        print("med_ID --> ", med_id)
+
+        if med_id == "":
+            raise Exception("Medicine ID can't be empty.")
+
+    except Exception as e:
+        mb.showerror("ERROR", e)
+        print(e)
+
+    try:
         mycur.execute("SELECT med_comp,med_name,med_price FROM med_details where med_id = '" + med_id + "'")
         myresult = mycur.fetchall()
 
         for x in myresult:
             print(x)
+        m_comp.config(state=NORMAL)
         m_comp.delete(0, END)
         m_comp.insert(END, x[0])
+        m_comp.config(state=DISABLED)
+
+        m_name.config(state=NORMAL)
         m_name.delete(0, END)
         m_name.insert(END, x[1])
+        m_name.config(state=DISABLED)
+
+        m_price.config(state=NORMAL)
         m_price.delete(0, END)
         m_price.insert(END, x[2])
+        m_price.config(state=DISABLED)
 
     except Exception as e:
        print(e)
 
 
-Label(frame_right, text="Medicine ID", bg="#c9d6d5", font=("Verdana", 10, 'bold')).place(x=50, y=20)
+Label(frame_right, text="Medicine ID", bg="#c9d6d5", font=("Verdana", 11, 'bold')).place(x=50, y=20)
 Button(frame_right, text="SEARCH", bg="#50aba5",font=("Verdana", 10, 'bold'), command=search, height=1, width=8).place(x=110, y=55)
-Label(frame_right, text="Medicine Company", bg="#c9d6d5", font=("Verdana", 10, 'bold')).place(x=300, y=20)
-Label(frame_right, text="Medicine Name", bg="#c9d6d5", font=("Verdana", 10, 'bold')).place(x=300, y=53)
-Label(frame_right, text="Unit Price", bg="#c9d6d5", font=("Verdana", 10, 'bold')).place(x=300, y=85)
+Label(frame_right, text="Medicine Company", bg="#c9d6d5", font=("Verdana", 11, 'bold')).place(x=280, y=20)
+Label(frame_right, text="Medicine Name", bg="#c9d6d5", font=("Verdana", 11, 'bold')).place(x=280, y=53)
+Label(frame_right, text="Unit Price", bg="#c9d6d5", font=("Verdana", 11, 'bold')).place(x=280, y=85)
 
-m_id = Entry(frame_right, font=("Verdana", 10), width=15)
-m_id.place(x=145, y=21)
+m_id = Entry(frame_right, font=("Verdana", 11, 'bold'), width=8)
+m_id.place(x=155, y=21)
 
-m_comp = Entry(frame_right, font=("Verdana", 10), width=22)
+m_comp = Entry(frame_right, font=("Verdana", 11, 'bold'), width=16)
 m_comp.place(x=445, y=21)
 
-m_name = Entry(frame_right, font=("Verdana", 10), width=22)
+m_name = Entry(frame_right, font=("Verdana", 11, 'bold'), width=16)
 m_name.place(x=445, y=55)
 
-m_price = Entry(frame_right, font=("Verdana", 10), width=22)
+m_price = Entry(frame_right, font=("Verdana", 11, 'bold'), width=16)
 m_price.place(x=445, y=88)
 
 
@@ -262,10 +281,8 @@ tree.column('#6', minwidth=60, width=90, stretch=0)
 
 
 # add Sql data to treeview
-mycur.execute("SELECT sale_details.s_id, customer.cust_name, sale_details.s_date, sale_details.s_med_id,"
-              "sale_details.s_qty, sale_details.s_totalamt "
-              "FROM sale_details INNER JOIN customer "
-              "ON sale_details.s_cust_id=customer.cust_id")
+mycur.execute("SELECT sale_details.s_id, customer.cust_name, sale_details.s_date, sale_details.s_med_id,sale_details.s_qty, sale_details.s_totalamt "
+              "FROM sale_details INNER JOIN customer ON sale_details.s_cust_id=customer.cust_id Order BY sale_details.s_date DESC")
 fetch = mycur.fetchall()
 for data in fetch:
     tree.insert('', 'end', values=(data[0], data[1], data[2], data[3], data[4], data[5]))

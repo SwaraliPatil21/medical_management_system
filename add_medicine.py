@@ -107,9 +107,9 @@ MenuBttn = Menubutton(frame_left, text="ADMIN", font=("Helvetica", 11, "bold"), 
 
 Menu1 = Menu(MenuBttn, tearoff=0)
 
-Menu1.add_command(label="       Add Admin       ", font=("Helvetica", 11, "bold"), command=call_addadmin)
+Menu1.add_command(label="           Add Admin        ", font=("Helvetica", 11, "bold"), command=call_addadmin)
 Menu1.add_separator()
-Menu1.add_command(label="       Admin List      ", font=("Helvetica", 11, "bold"), command=call_viewadmin)
+Menu1.add_command(label="           Admin List       ", font=("Helvetica", 11, "bold"), command=call_viewadmin)
 
 MenuBttn["menu"] = Menu1
 MenuBttn.grid(column=1, row=1, pady=12, padx=20)
@@ -119,9 +119,9 @@ MenuBttn = Menubutton(frame_left, text="MEDICINES", font=("Helvetica", 11, "bold
 
 Menu2 = Menu(MenuBttn, tearoff=0)
 
-Menu2.add_command(label="   Add Medicine    ", font=("Helvetica", 11, "bold"))
+Menu2.add_command(label="       Add Medicine      ", font=("Helvetica", 11, "bold"))
 Menu2.add_separator()
-Menu2.add_command(label="   Medicine List   ", font=("Helvetica", 11, "bold"), command=call_viewmedicine)
+Menu2.add_command(label="       Medicine List      ", font=("Helvetica", 11, "bold"), command=call_viewmedicine)
 
 MenuBttn["menu"] = Menu2
 MenuBttn.grid(column=1, row=2, pady=12, padx=20)
@@ -131,7 +131,7 @@ MenuBttn = Menubutton(frame_left, text="CUSTOMERS", font=("Helvetica", 11, "bold
 
 Menu3 = Menu(MenuBttn, tearoff=0)
 
-Menu3.add_command(label="       Customer List       ", font=("Helvetica", 11, "bold"), command=call_viewcustomer)
+Menu3.add_command(label="       Customer List      ", font=("Helvetica", 11, "bold"), command=call_viewcustomer)
 
 MenuBttn["menu"] = Menu3
 MenuBttn.grid(column=1, row=3, pady=12, padx=20)
@@ -141,7 +141,7 @@ MenuBttn = Menubutton(frame_left, text="SUPPLIERS", font=("Helvetica", 11, "bold
 
 Menu4 = Menu(MenuBttn, tearoff=0)
 
-Menu4.add_command(label="       Supplier List       ", font=("Helvetica", 11, "bold"), command=call_viewsupplier)
+Menu4.add_command(label="        Supplier List       ", font=("Helvetica", 11, "bold"), command=call_viewsupplier)
 
 MenuBttn["menu"] = Menu4
 MenuBttn.grid(column=1, row=4, pady=12, padx=20)
@@ -151,9 +151,9 @@ MenuBttn = Menubutton(frame_left, text="SALES", font=("Helvetica", 11, "bold"), 
 
 Menu5 = Menu(MenuBttn, tearoff=0)
 
-Menu5.add_command(label="       Add Sales     ", font=("Helvetica", 11, "bold"), command=call_addsales)
+Menu5.add_command(label="          Add Sales     ", font=("Helvetica", 11, "bold"), command=call_addsales)
 Menu5.add_separator()
-Menu5.add_command(label="       View Sales    ", font=("Helvetica", 11, "bold"), command=call_viewsales)
+Menu5.add_command(label="         View Sales         ", font=("Helvetica", 11, "bold"), command=call_viewsales)
 
 MenuBttn["menu"] = Menu5
 MenuBttn.grid(column=1, row=5, pady=12, padx=20)
@@ -163,9 +163,9 @@ MenuBttn = Menubutton(frame_left, text="PURCHASES", font=("Helvetica", 11, "bold
 
 Menu6 = Menu(MenuBttn, tearoff=0)
 
-Menu6.add_command(label="   Add Purchase   ", font=("Helvetica", 11, "bold"), command=call_addpurchase)
+Menu6.add_command(label="     Add Purchase      ", font=("Helvetica", 11, "bold"), command=call_addpurchase)
 Menu6.add_separator()
-Menu6.add_command(label="  View Purchases  ", font=("Helvetica", 11, "bold"), command=call_viewpurchase)
+Menu6.add_command(label="     View Purchases    ", font=("Helvetica", 11, "bold"), command=call_viewpurchase)
 
 MenuBttn["menu"] = Menu6
 MenuBttn.grid(column=1, row=6, pady=12, padx=20)

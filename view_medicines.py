@@ -11,7 +11,7 @@ db = MySQLdb.connect(host="localhost", user="root", passwd="", database="medical
 mycur = db.cursor()
 
 root = Tk()
-root.title('View Medicine List')
+root.title('Medicine List')
 root.geometry('{}x{}+200+100'.format(1000, 500))
 
 root.grid_rowconfigure(1, weight=1)
@@ -117,9 +117,9 @@ dashoboard.grid(column=1, row=0, pady=12, padx=20)
 MenuBttn = Menubutton(frame_left, text="ADMIN", font=("Helvetica", 11, "bold"), bg="#50aba5", width=23)
 
 Menu1 = Menu(MenuBttn, tearoff=0)
-Menu1.add_command(label="       Add Admin       ", font=("Helvetica", 11), command=call_addadmin)
+Menu1.add_command(label="           Add Admin        ", font=("Helvetica", 11, "bold"), command=call_addadmin)
 Menu1.add_separator()
-Menu1.add_command(label="       Admin List      ", font=("Helvetica", 11), command=call_viewadmin)
+Menu1.add_command(label="           Admin List       ", font=("Helvetica", 11, "bold"), command=call_viewadmin)
 
 MenuBttn["menu"] = Menu1
 MenuBttn.grid(column=1, row=1, pady=12, padx=20)
@@ -128,9 +128,9 @@ MenuBttn.grid(column=1, row=1, pady=12, padx=20)
 MenuBttn = Menubutton(frame_left, text="MEDICINES", font=("Helvetica", 11, "bold"), bg="#50aba5", width=23)
 
 Menu2 = Menu(MenuBttn, tearoff=0)
-Menu2.add_command(label="   Add Medicine    ", font=("Helvetica", 11), command=call_addmedicine)
+Menu2.add_command(label="       Add Medicine      ", font=("Helvetica", 11, "bold"), command=call_addmedicine)
 Menu2.add_separator()
-Menu2.add_command(label="   Medicine List   ", font=("Helvetica", 11))
+Menu2.add_command(label="       Medicine List      ", font=("Helvetica", 11, "bold"))
 
 MenuBttn["menu"] = Menu2
 MenuBttn.grid(column=1, row=2, pady=12, padx=20)
@@ -139,7 +139,7 @@ MenuBttn.grid(column=1, row=2, pady=12, padx=20)
 MenuBttn = Menubutton(frame_left, text="CUSTOMERS", font=("Helvetica", 11, "bold"), bg="#50aba5", width=23)
 
 Menu3 = Menu(MenuBttn, tearoff=0)
-Menu3.add_command(label="       Customer List       ", font=("Helvetica", 11), command=call_viewcustomer)
+Menu3.add_command(label="       Customer List      ", font=("Helvetica", 11, "bold"), command=call_viewcustomer)
 
 MenuBttn["menu"] = Menu3
 MenuBttn.grid(column=1, row=3, pady=12, padx=20)
@@ -148,7 +148,7 @@ MenuBttn.grid(column=1, row=3, pady=12, padx=20)
 MenuBttn = Menubutton(frame_left, text="SUPPLIERS", font=("Helvetica", 11, "bold"), bg="#50aba5", width=23)
 
 Menu4 = Menu(MenuBttn, tearoff=0)
-Menu4.add_command(label="       Supplier List       ", font=("Helvetica", 11), command=call_viewsupplier)
+Menu4.add_command(label="        Supplier List       ", font=("Helvetica", 11, "bold"), command=call_viewsupplier)
 
 MenuBttn["menu"] = Menu4
 MenuBttn.grid(column=1, row=4, pady=12, padx=20)
@@ -157,9 +157,9 @@ MenuBttn.grid(column=1, row=4, pady=12, padx=20)
 MenuBttn = Menubutton(frame_left, text="SALES", font=("Helvetica", 11, "bold"), bg="#50aba5", width=23)
 
 Menu5 = Menu(MenuBttn, tearoff=0)
-Menu5.add_command(label="       Add Sales     ", font=("Helvetica", 11), command=call_addsales)
+Menu5.add_command(label="          Add Sales     ", font=("Helvetica", 11, "bold"), command=call_addsales)
 Menu5.add_separator()
-Menu5.add_command(label="       View Sales    ", font=("Helvetica", 11), command=call_viewsales)
+Menu5.add_command(label="         View Sales         ", font=("Helvetica", 11, "bold"), command=call_viewsales)
 
 MenuBttn["menu"] = Menu5
 MenuBttn.grid(column=1, row=5, pady=12, padx=20)
@@ -168,9 +168,9 @@ MenuBttn.grid(column=1, row=5, pady=12, padx=20)
 MenuBttn = Menubutton(frame_left, text="PURCHASES", font=("Helvetica", 11, "bold"), bg="#50aba5", width=23)
 
 Menu6 = Menu(MenuBttn, tearoff=0)
-Menu6.add_command(label="   Add Purchase    ", font=("Helvetica", 11), command=call_addpurchase)
+Menu6.add_command(label="     Add Purchase      ", font=("Helvetica", 11, "bold"), command=call_addpurchase)
 Menu6.add_separator()
-Menu6.add_command(label="   View Purchases  ", font=("Helvetica", 11), command=call_viewpurchase)
+Menu6.add_command(label="     View Purchases    ", font=("Helvetica", 11, "bold"), command=call_viewpurchase)
 
 MenuBttn["menu"] = Menu6
 MenuBttn.grid(column=1, row=6, pady=12, padx=20)
