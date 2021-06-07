@@ -2,6 +2,7 @@ from tkinter import *
 from tkinter.messagebox import *
 from tkinter import messagebox as mb
 import MySQLdb
+import tkinter.ttk as ttk
 import tkinter as tk
 import os
 
@@ -244,19 +245,86 @@ except Exception as e:
 try:
     mycur.execute("SELECT COUNT(DISTINCT s_id) from sale_details "
                   "WHERE month(s_date)= MONTH(CURDATE()) GROUP BY month(s_date)")
-    myresult_sales = mycur.fetchall()
-    for myresult_sales in mycur:
-        print("Sales of Month", myresult_sales)
+    myresult_sales_month = mycur.fetchall()
+    for myresult_sales_month in mycur:
+        print("Sales of Month", myresult_sales_month)
 except Exception as e:
     print(e)
     db.rollback()
 
-label = Label(frame_right, text=(str("Sales Of Month"'\n'"%s " % myresult_sales)), font=("Helvetica", 20, "bold"), bg="#4d9653", width=15,
+label = Label(frame_right, text=(str("Sales Of Month"'\n'"%s " % myresult_sales_month)), font=("Helvetica", 20, "bold"), bg="#4d9653", width=15,
               height=3)
 label.grid(column=1, row=0, pady=30, padx=40)
 
 
+# Sales of day
+try:
+    mycur.execute(
+        "SELECT COUNT(DISTINCT s_id) from sale_details WHERE day(s_date)= day(CURDATE()) GROUP BY day(s_date)")
+    myresult_sales_day = mycur.fetchall()
+    for myresult_sales_day in mycur:
+        print("Sales Of Day", myresult_sales_day)
+except Exception as e:
+    print(e)
+    db.rollback()
+
+label = Label(frame_right, text=(str("Sales Of Today"'\n'"%s " % myresult_sales_day)), font=("Helvetica", 20, "bold"),
+              bg="#4d8096", width=15, height=3)
+label.grid(column=4, row=0, pady=30, padx=40)
+
+
 # Expired Medicines
+def destroy_exp_med():
+    frame_exp_med.destroy()
+
+def expired_medicines():
+    global frame_exp_med
+    frame_exp_med = Toplevel(root,bg="#bcc4bf")
+    frame_exp_med.title("Expired Medicines")
+    frame_exp_med.geometry('{}x{}+540+240'.format(570, 250))
+
+    Heading = Label(frame_exp_med, text="Expired Medicines",font=("Helvetica", 18, "bold"),bg="#bcc4bf", fg="#a81111")
+    Heading.place(x=200,y=8)
+    # Table
+    columns = ('#1', '#2', '#3', '#4', '#5')
+
+    tree = ttk.Treeview(frame_exp_med, selectmode="extended", columns=columns, show='headings',height=5)
+    style = ttk.Style()
+    style.theme_use("default")
+    style.configure("Treeview.Heading", font=('Verdana', 12,'bold'), background ="#ffa3a3", foreground="Black")
+    style.configure('Treeview.Heading', rowheight=30)
+    style.configure(".", font=('Helvetica', 11))
+    style.configure('.', rowheight=25)
+
+    # define headings and column length
+    tree.heading('#1', text='Med ID', anchor=W)
+    tree.column('#1', minwidth=70, width=70, stretch=0)
+
+    tree.heading('#2', text='Name', anchor=W)
+    tree.column('#2', minwidth=100, width=120, stretch=0)
+
+    tree.heading('#3', text='Company', anchor=W)
+    tree.column('#3', minwidth=70, width=130, stretch=0)
+
+    tree.heading('#4', text='MFG Date', anchor=W)
+    tree.column('#4', minwidth=60, width=100, stretch=0)
+
+    tree.heading('#5', text='EXP Date', anchor=W)
+    tree.column('#5', minwidth=60, width=100, stretch=0)
+
+    mycur.execute("SELECT med_batch_details.med_id, med_details.med_name, med_details.med_comp, "
+                  "med_batch_details.med_mfg, med_batch_details.med_exp FROM med_batch_details "
+                  "JOIN med_details ON med_batch_details.med_id = med_details.med_id "
+                  "WHERE med_batch_details.med_exp <= NOW()")
+    fetch = mycur.fetchall()
+    for data in fetch:
+        tree.insert('', 'end', values=(data[0], data[1], data[2], data[3], data[4]))
+
+    tree.place(x=25,y=50)
+
+    Okay = Button(frame_exp_med, text="OK", bg="#a81111", fg="white",font=("Helvetica", 11, "bold"), width=10, height=1, command=destroy_exp_med)
+    Okay.place(x=255,y=205)
+
 try:
     mycur.execute("SELECT COUNT(med_id) from med_batch_details WHERE med_batch_details.med_exp <= NOW()")
     myresult_exp = mycur.fetchall()
@@ -266,26 +334,62 @@ except Exception as e:
     print(e)
     db.rollback()
 
-label = Label(frame_right, text=(str("Expired Products"'\n'"%s " % myresult_exp)), font=("Helvetica", 20, "bold"),
-              bg="#e02626", width=15, height=3)
-label.grid(column=1, row=3, pady=30, padx=40)
-
-# Stock shortage
-try:
-    mycur.execute(
-        "SELECT COUNT(med_id) from med_batch_details WHERE med_batch_details.curr_qty <= 20 and med_batch_details.med_status ='AVAILABLE'")
-    myresult_stckshortage = mycur.fetchall()
-    for myresult_stckshortage in mycur:
-        print("Stock Shortage", myresult_stckshortage)
-except Exception as e:
-    print(e)
-    db.rollback()
-
-label = Label(frame_right, text=(str("Stock Shortage"'\n'"%s " % myresult_stckshortage)), font=("Helvetica", 20, "bold"),
-              bg="#4d8096", width=15, height=3)
-label.grid(column=4, row=0, pady=30, padx=40)
+button1 = Button(frame_right, text=(str("Expired Medicines"'\n'"%s " % myresult_exp)), font=("Helvetica", 20, "bold"),
+              bg="#e02626", width=14, height=2,bd=7, command=expired_medicines)
+button1.place(x=40, y=170)
 
 # Near Expiry Medicines
+def destroy_near_exp():
+    frame_near_exp.destroy()
+
+def near_exp():
+    global frame_near_exp
+    frame_near_exp = Toplevel(root,bg="#bcc4bf")
+    frame_near_exp.title("Near Expiry Medicines")
+    frame_near_exp.geometry('{}x{}+540+240'.format(570, 250))
+
+    Heading = Label(frame_near_exp, text="Near Expiry Medicines",font=("Helvetica", 18, "bold"),bg="#bcc4bf", fg="#a15e06")
+    Heading.place(x=155,y=8)
+    # Table
+    columns = ('#1', '#2', '#3', '#4', '#5')
+
+    tree = ttk.Treeview(frame_near_exp, selectmode="extended", columns=columns, show='headings',height=5)
+    style = ttk.Style()
+    style.theme_use("default")
+    style.configure("Treeview.Heading", font=('Verdana', 12,'bold'), background ="#fab65c", foreground="Black")
+    style.configure('Treeview.Heading', rowheight=30)
+    style.configure(".", font=('Helvetica', 11))
+    style.configure('.', rowheight=25)
+
+    # define headings and column length
+    tree.heading('#1', text='Med ID', anchor=W)
+    tree.column('#1', minwidth=70, width=70, stretch=0)
+
+    tree.heading('#2', text='Name', anchor=W)
+    tree.column('#2', minwidth=100, width=120, stretch=0)
+
+    tree.heading('#3', text='Company', anchor=W)
+    tree.column('#3', minwidth=70, width=130, stretch=0)
+
+    tree.heading('#4', text='MFG Date', anchor=W)
+    tree.column('#4', minwidth=60, width=100, stretch=0)
+
+    tree.heading('#5', text='EXP Date', anchor=W)
+    tree.column('#5', minwidth=60, width=100, stretch=0)
+
+    mycur.execute("SELECT med_batch_details.med_id, med_details.med_name, med_details.med_comp, "
+                  "med_batch_details.med_mfg, med_batch_details.med_exp FROM med_batch_details "
+                  "JOIN med_details ON med_batch_details.med_id = med_details.med_id "
+                  "where med_exp between now() and adddate(now(), INTERVAL 10 DAY)")
+    fetch = mycur.fetchall()
+    for data in fetch:
+        tree.insert('', 'end', values=(data[0], data[1], data[2], data[3], data[4]))
+
+    tree.place(x=25,y=50)
+
+    Okay = Button(frame_near_exp, text="OK", bg="#d17906", fg="white",font=("Helvetica", 11, "bold"), width=10, height=1, command=destroy_near_exp)
+    Okay.place(x=255,y=205)
+
 try:
     mycur.execute(
         "SELECT COUNT(med_id) from med_batch_details where med_exp between now() and adddate(now(), INTERVAL 10 DAY)")
@@ -296,8 +400,72 @@ except Exception as e:
     print(e)
     db.rollback()
 
-label = Label(frame_right, text=(str("Near Expiry"'\n'"%s " % myresult_nearexp)), font=("Helvetica", 20, "bold"),
-              bg="#e3932b", width=15, height=3)
-label.grid(column=4, row=3, pady=30, padx=40)
+button2 = Button(frame_right, text=(str("Near Expiry"'\n'"%s " % myresult_nearexp)), font=("Helvetica", 20, "bold"),
+              command=near_exp,bg="#e3932b", width=14, height=2,bd=7)
+button2.place(x=381, y=170)
+
+# Stock shortage
+def destroy_stock_short():
+    frame_stock_short.destroy()
+
+def stock_short():
+    global frame_stock_short
+    frame_stock_short = Toplevel(root,bg="#bcc4bf")
+    frame_stock_short.title("Stock Shortage Medicines")
+    frame_stock_short.geometry('{}x{}+560+240'.format(475, 250))
+
+    Heading = Label(frame_stock_short, text="Stock Shortage Medicines",font=("Helvetica", 18, "bold"),bg="#bcc4bf", fg="#66311c")
+    Heading.place(x=100,y=8)
+    # Table
+    columns = ('#1', '#2', '#3', '#4')
+
+    tree = ttk.Treeview(frame_stock_short, selectmode="extended", columns=columns, show='headings',height=5)
+    style = ttk.Style()
+    style.theme_use("default")
+    style.configure("Treeview.Heading", font=('Verdana', 12,'bold'), background ="#ab7560", foreground="Black")
+    style.configure('Treeview.Heading', rowheight=30)
+    style.configure(".", font=('Helvetica', 11))
+    style.configure('.', rowheight=25)
+
+    # define headings and column length
+    tree.heading('#1', text='Med ID', anchor=W)
+    tree.column('#1', minwidth=70, width=70, stretch=0)
+
+    tree.heading('#2', text='Name', anchor=W)
+    tree.column('#2', minwidth=100, width=120, stretch=0)
+
+    tree.heading('#3', text='Company', anchor=W)
+    tree.column('#3', minwidth=70, width=130, stretch=0)
+
+    tree.heading('#4', text='Curr Qty', anchor=W)
+    tree.column('#4', minwidth=60, width=100, stretch=0)
+
+    mycur.execute("SELECT med_batch_details.med_id, med_details.med_name, med_details.med_comp, med_batch_details.curr_qty "
+                  "FROM med_batch_details JOIN med_details ON med_batch_details.med_id = med_details.med_id "
+                  "WHERE med_batch_details.curr_qty <= 20 and med_batch_details.med_status ='AVAILABLE'")
+    fetch = mycur.fetchall()
+    for data in fetch:
+        tree.insert('', 'end', values=(data[0], data[1], data[2], data[3]))
+
+    tree.place(x=25,y=50)
+
+    Okay = Button(frame_stock_short, text="OK", bg="#66311c", fg="white",font=("Helvetica", 11, "bold"), width=10, height=1, command=destroy_stock_short)
+    Okay.place(x=180,y=205)
+
+try:
+    mycur.execute(
+        "SELECT COUNT(med_id) from med_batch_details "
+        "WHERE med_batch_details.curr_qty <= 20 and med_batch_details.med_status ='AVAILABLE'")
+    myresult_stckshortage = mycur.fetchall()
+    for myresult_stckshortage in mycur:
+        print("Stock Shortage", myresult_stckshortage)
+except Exception as e:
+    print(e)
+    db.rollback()
+
+button3 = Button(frame_right, text=(str("Stock Shortage"'\n'"%s " % myresult_stckshortage)), font=("Helvetica", 20, "bold"),
+              command=stock_short,bg="#94604b", width=14, height=2,bd=7)
+button3.place(x=208, y=300)
+
 
 root.mainloop()

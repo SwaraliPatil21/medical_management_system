@@ -64,7 +64,7 @@ def call_dashboard():
 
 
 def call_addadmin():
-    root.destroy
+    root.destroy()
     os.system('python3 add_admin.py')
 
 
@@ -276,7 +276,7 @@ def delete_data(tree):
     except Exception as e:
         print(e)
         db.rollback()
-    mb.showinfo("success", "MEDICINE data deleted!")
+    mb.showinfo("success", "Medicine data deleted!")
 
 
 
@@ -335,7 +335,7 @@ def select_data(tree):
         except Exception as e:
             print(e)
             db.rollback()
-        mb.showinfo("Success", "Admin data Updated")
+        mb.showinfo("Success", "Medicine Data Updated!")
         f.destroy()
 
     cancelbutton = tk.Button(f, text="CANCEL",font=("Times New Roman", 12, "bold"), bg="#50aba5", width=8,

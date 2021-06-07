@@ -221,8 +221,11 @@ def add_cust_form():
     Button(cust, text="CANCEL", font=("Times New Roman", 12, "bold"), fg="White", bg="#285e5a", width=8, height=1,
            command=cust_destroy).place(x=95, y=280)
     Button(cust, text="SUBMIT", font=("Times New Roman", 12, "bold"), fg="White", bg="#285e5a", width=8, height=1,
-           command=cust_add).place(x=200, y=280)
+           command=lambda: [cust_add(),call_addself()]).place(x=200, y=280)
 
+def call_addself():
+    root.destroy()
+    os.system('python3 add_sales.py')
 
 def cust_add():
     name = add_name.get()
@@ -326,7 +329,7 @@ def additm():
     m = quantity.get() * n
     l.append(m)
     if item.get() != '':
-        textarea.insert((10.0 + float(len(l) - 1)), f"{item.get()}\t\t\t{n}\t{q}\t{m}\n")
+        textarea.insert((10.0 + float(len(l) - 1)), f"{item.get()}\t\t{n}\t{q}\t{m}\n")
         for t in myresult:
             if t[1] == m_name:
                 print('MED ID:', t[0])
@@ -361,9 +364,9 @@ def gbill():
     welcome()
     print(all_med)
     textarea.insert(END, textAreaText)
-    textarea.insert(END, f"\n=========================================")
-    textarea.insert(END, f"\nTotal Paybill Amount :\t\t  {sum(l)}")
-    textarea.insert(END, f"\n\n=========================================")
+    textarea.insert(END, f"\n=======================================")
+    textarea.insert(END, f"\nTotal Paybill Amount :\t  {sum(l)}")
+    textarea.insert(END, f"\n\n=======================================")
     save_bill()
 
 
@@ -426,9 +429,9 @@ def welcome():
     textarea.insert(END, f"\n\nBill Number:\t{sale_id}")
     textarea.insert(END, f"\nCustomer Name:\t{customer_value.get()}")
     textarea.insert(END, f"\nDate: {date}")
-    textarea.insert(END, f"\n\n============================================")
-    textarea.insert(END, "\nMedicines\t\t\tRate\tQty\tPrice")
-    textarea.insert(END, f"\n============================================\n")
+    textarea.insert(END, f"\n\n=======================================")
+    textarea.insert(END, "\nMedicines\t\tRate\tQty\tPrice")
+    textarea.insert(END, f"\n=======================================\n")
     textarea.configure(font='arial 12 bold')
 
 
@@ -436,7 +439,6 @@ def select_name(event):
     global m_name
     global c_name
 
-    # print("ComboNumber", cb_number, "SelectedValue",  selected_name.get())
     m_name = str(item.get())
     c_name = str(customer_value.get())
 
@@ -508,7 +510,7 @@ n_txt.place(x=100, y=212)
 
 # ========================Bill area================
 Bill_frame = Frame(frame_right, relief=GROOVE, bd=10)
-Bill_frame.place(x=293, y=10, width=442, height=385)
+Bill_frame.place(x=320, y=10, width=400, height=385)
 
 bill_title = Label(Bill_frame, text='Bill Area', font='arial 15 bold', bd=7, relief=GROOVE)
 scrol_y = Scrollbar(Bill_frame, orient=VERTICAL)

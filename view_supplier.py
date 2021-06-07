@@ -5,9 +5,10 @@ from tkinter.messagebox import showinfo
 from tkinter import messagebox as mb
 import MySQLdb
 import os
+import re
 
-#connecting_to_the_database
-db = MySQLdb.connect(host="localhost",user="root",passwd="",database="medical")
+# connecting_to_the_database
+db = MySQLdb.connect(host="localhost", user="root", passwd="", database="medical")
 mycur = db.cursor()
 
 root = Tk()
@@ -15,18 +16,18 @@ root.title('Supplier List')
 root.geometry('{}x{}+200+100'.format(1000, 500))
 root.resizable('false', 'false')
 
-#frames
+# frames
 frame_top = Frame(root, width=800, height=50, bg="#285e5a")
 frame_left = Frame(root, width=240, height=420, bg="#285e5a")
 frame_right = Frame(root, width=740, height=420, bg="#c9d6d5")
 
-#grid
+# grid
 root.grid_rowconfigure(1, weight=1)
 root.grid_columnconfigure(0, weight=1)
 
-frame_top.grid(row=0,sticky="ew")
-frame_left.grid(row=1,sticky="w")
-frame_right.grid(row=1,sticky="e")
+frame_top.grid(row=0, sticky="ew")
+frame_left.grid(row=1, sticky="w")
+frame_right.grid(row=1, sticky="e")
 
 frame_top.grid_rowconfigure(1, weight=1)
 frame_top.grid_columnconfigure(0, weight=1)
@@ -43,6 +44,7 @@ frame_right.grid_propagate(False)
 svar = tk.StringVar()
 Scrollable_text = tk.Label(frame_top, textvariable=svar, height=1, width=200, font=("Helvetica", 14, "bold"),
                            fg="White", bg="#285e5a")
+
 
 def shif():
     deli = 195
@@ -204,8 +206,8 @@ columns = ('#1', '#2', '#3', '#4', '#5', '#6')
 
 tree = ttk.Treeview(frame_right, selectmode="extended", columns=columns, show='headings')
 style = ttk.Style()
-style.theme_use("clam") #can also give default
-style.configure("Treeview.Heading", font=('Verdana',12,"bold"), background ="#50aba5", foreground="Black")
+style.theme_use("clam")  # can also give default
+style.configure("Treeview.Heading", font=('Verdana', 12, "bold"), background="#50aba5", foreground="Black")
 style.configure('Treeview.Heading', rowheight=25)
 style.configure(".", font=('Helvetica', 11), foreground="Black")
 style.configure('.', rowheight=25)
@@ -229,7 +231,6 @@ tree.column('#5', minwidth=30, width=150, stretch=0)
 tree.heading('#6', text='Address', anchor=W)
 tree.column('#6', minwidth=30, width=220, stretch=0)
 
-
 # add Sql data to treeview
 try:
     mycur.execute("SELECT sup_id,sup_agency,sup_name,sup_phn,sup_email, sup_addr FROM `supplier`")
@@ -240,6 +241,7 @@ except Exception as e:
     print(e)
     db.rollback()
 
+
 # bind the select event
 def item_selected(event):
     for selected_item in tree.selection():
@@ -248,10 +250,13 @@ def item_selected(event):
         # list
         record = item['values']
 
-#to stop column movement
+
+# to stop column movement
 def handle_click(event):
     if tree.identify_region(event.x, event.y) == "separator":
         return "break"
+
+
 tree.bind('<Button-1>', handle_click)
 
 tree.bind('<<TreeviewSelect>>', item_selected)
@@ -285,7 +290,6 @@ def delete_data(tree):
     mb.showinfo("success", "SUPPLIER data deleted!")
 
 
-
 # Update_table_selection
 updatebutton = tk.Button(frame_right, text="EDIT", command=lambda: (select_data(tree)))
 updatebutton.configure(font=('Verdana', 12, 'bold'), bg="#318781", cursor="hand2")
@@ -300,10 +304,10 @@ def select_data(tree):
     values = tree.item(curItem, "values")
     print(values)
 
-    head = Label(f, text="Update Supplier",width=15, font=("Times New Roman", 14, "bold"), fg="White", bg="#285e5a")
+    head = Label(f, text="Update Supplier", width=15, font=("Times New Roman", 14, "bold"), fg="White", bg="#285e5a")
     head.place(x=110, y=20)
 
-    l1 = Label(f, text="Agency"'\n'"Name",font=("Times New Roman", 14, "bold"), bg="#c5dedd")
+    l1 = Label(f, text="Agency"'\n'"Name", font=("Times New Roman", 14, "bold"), bg="#c5dedd")
     l1.place(x=55, y=65)
     e1 = Entry(f, textvariable=add_agencyname, width=17, font="Verdana 11")
     e1.place(x=130, y=68)
@@ -333,7 +337,6 @@ def select_data(tree):
     e5.place(x=130, y=240)
     e5.delete(0, END)
 
-
     e1.insert(0, (values[1]))
     e2.insert(0, (values[2]))
     e3.insert(0, (values[3]))
@@ -342,30 +345,67 @@ def select_data(tree):
 
     def update_data():
         # nonlocal e1, e2, e3, curItem, values
+        regex = '^(\w|\.|\_|\-)+[@](\w|\_|\-|\.)+[.]\w{2,3}$'
         try:
             e1 = add_agencyname.get()
             e2 = add_name.get()
             e3 = add_phone.get()
             e4 = add_email.get()
             e5 = add_addr.get()
-            tree.item(curItem, values=(values[0], e1, e2, e3, e4, e5))
-            print("Supplier id",values[0])
-            mycur.execute("UPDATE supplier SET sup_agency=%s, sup_name=%s, sup_phn=%s, sup_email=%s, sup_addr=%s, WHERE sup_id=%s",
-                          (e1, e2, e3, e4, e5, values[0]))
-            db.commit()
+
+            # for c in e1:
+            #     if not (c.isalpha() or c.isspace()):
+            #         raise Exception("Agency Name should contain alphabets only. ")
+            if e1 == "" or e2 == "" or e3 == "" or e4 == '' or e5 == '':
+                raise Exception("Fields are Empty.")  # or values can't be null
+
+            for c in e2:
+                if not (c.isalpha() or c.isspace()):
+                    raise Exception("Name should contain alphabets only. ")
+
+            for c in e2:
+                if not (c.isalpha() or c.isspace()):
+                    raise Exception(" Incorrect City Name. ")
+
+            if len(e3) > 6 or len(e3) < 6:
+                raise Exception(" Phone no. should contain 6 digits.")
+
+            if not e3.isdigit:
+                raise Exception(" Phone no. should contain only digits")
+
+            if re.search(regex, e4):
+                pass
+            else:
+                raise Exception(" Invalid Email.")
+
+
         except Exception as e:
-            print(e)
+            print("Issue --> ", e)
+            mb.showerror("ERROR ", e)
             db.rollback()
-        mb.showinfo("Success", "Admin data Updated")
+        except Exception:
+            print("Invalid data.")
+            mb.showerror("Invalid Data.")
+            db.rollback()
+
+        else:
+            tree.item(curItem, values=(values[0], e1, e2, e3, e4, e5))
+            print("Supplier id", values[0])
+            mycur.execute(
+                "UPDATE supplier SET sup_agency=%s, sup_name=%s, sup_phn=%s, sup_email=%s, sup_addr=%s WHERE sup_id=%s",
+                (e1, e2, e3, e4, e5, values[0]))
+            db.commit()
+            mb.showinfo("Success", "Supplier data Updated")
         f.destroy()
 
-    cancelbutton = tk.Button(f, text="CANCEL",font=("Times New Roman", 12, "bold"), bg="#50aba5", width=8,
+        f.destroy()
+
+    cancelbutton = tk.Button(f, text="CANCEL", font=("Times New Roman", 12, "bold"), bg="#50aba5", width=8,
                              command=f.destroy)
     cancelbutton.place(x=100, y=290)
-    savebutton = tk.Button(f, text="SAVE",font=("Times New Roman", 12, "bold"), bg="#50aba5", width=8,
-                            command=update_data)
+    savebutton = tk.Button(f, text="SAVE", font=("Times New Roman", 12, "bold"), bg="#50aba5", width=8,
+                           command=update_data)
     savebutton.place(x=200, y=290)
-
 
 
 root.mainloop()

@@ -65,7 +65,7 @@ def call_dashboard():
 
 
 def call_addadmin():
-    root.destroy
+    root.destroy()
     os.system('python3 add_admin.py')
 
 
@@ -110,9 +110,9 @@ def call_addpurchase():
 
 
 # Left_button_Dashboard
-dashoboard = Button(frame_left, text="DASHBOARD", font=("Helvetica", 11, "bold"),
-                    bg="#50aba5", width=21, command=call_dashboard)
-dashoboard.grid(column=1, row=0, pady=12, padx=20)
+dashboard = Button(frame_left, text="DASHBOARD", font=("Helvetica", 11, "bold"),
+                   bg="#50aba5", width=21, command=call_dashboard)
+dashboard.grid(column=1, row=0, pady=12, padx=20)
 
 # Left_Menu1
 MenuBttn = Menubutton(frame_left, text="ADMIN", font=("Helvetica", 11, "bold"), bg="#50aba5", width=23)
@@ -176,40 +176,40 @@ Menu6.add_command(label="     View Purchases    ", font=("Helvetica", 11, "bold"
 MenuBttn["menu"] = Menu6
 MenuBttn.grid(column=1, row=6, pady=12, padx=20)
 
+
 # --------------------------------------------------------------------------------------------------------------------
 # Right_frame
 # Search Function
 def search():
+    m_comp.delete(0, END)
+    m_name.delete(0, END)
+
     global myresult
     med_id = m_id.get()
     med_comp = m_comp.get()
     med_name = m_name.get()
     try:
-        m_comp.delete(0, END)
-        m_name.delete(0, END)
-
         print("med_ID --> ", med_id)
         if med_id == "":
-            raise Exception("Med_id can't be empty.")
+            raise Exception("Medicine ID can't be empty.")
 
     except Exception as e:
         mb.showerror("ERROR", e)
-        print(e)
+        print("ERROR --> ", e)
+        db.rollback()
 
-    try:
+    else:
+        # try:
+
         mycur.execute("SELECT med_comp,med_name,med_price FROM med_details where med_id = '" + med_id + "'")
         myresult = mycur.fetchall()
 
         for x in myresult:
             print(x)
-        m_comp.delete(0, END)
-        m_comp.insert(END, x[0])
-        m_name.delete(0, END)
-        m_name.insert(END, x[1])
 
-    except Exception as e:
-        print(e)
-        db.rollback()
+            m_comp.insert(END, x[0])
+            m_name.insert(END, x[1])
+
 
 Label(frame_right, text="Medicine ID", bg="#c9d6d5", font=("Verdana", 11, 'bold')).place(x=50, y=20)
 Button(frame_right, text="SEARCH", bg="#50aba5", font=("Verdana", 10, 'bold'), command=search, height=1, width=8).place(
@@ -217,15 +217,14 @@ Button(frame_right, text="SEARCH", bg="#50aba5", font=("Verdana", 10, 'bold'), c
 Label(frame_right, text="Medicine Company", bg="#c9d6d5", font=("Verdana", 11, 'bold')).place(x=300, y=20)
 Label(frame_right, text="Medicine Name", bg="#c9d6d5", font=("Verdana", 11, 'bold')).place(x=300, y=53)
 
-m_id = Entry(frame_right, font=("Verdana", 10), width=10)
+m_id = Entry(frame_right, font=("Verdana", 10, 'bold'), width=10)
 m_id.place(x=155, y=21)
 
-m_comp = Entry(frame_right, font=("Verdana", 10), width=20)
+m_comp = Entry(frame_right, font=("Verdana", 10, 'bold'), width=20)
 m_comp.place(x=460, y=21)
 
-m_name = Entry(frame_right, font=("Verdana", 10), width=20)
+m_name = Entry(frame_right, font=("Verdana", 10, 'bold'), width=20)
 m_name.place(x=460, y=55)
-
 
 # Purchase List Label
 purchase_lst = Label(frame_right, text="Purchases List", font=("Times New Roman", 18, "bold"), fg="White", bg="#285e5a")
@@ -236,8 +235,8 @@ columns = ('#1', '#2', '#3', '#4', '#5', '#6')
 
 tree = ttk.Treeview(frame_right, selectmode="extended", columns=columns, show='headings')
 style = ttk.Style()
-style.theme_use("clam") #can also give default
-style.configure("Treeview.Heading", font=('Verdana',11,"bold"), background ="#50aba5", foreground="Black")
+style.theme_use("clam")  # can also give default
+style.configure("Treeview.Heading", font=('Verdana', 11, "bold"), background="#50aba5", foreground="Black")
 style.configure('Treeview.Heading', rowheight=25)
 style.configure(".", font=('Helvetica', 12), foreground="Black")
 style.configure('.', rowheight=20)
@@ -264,14 +263,16 @@ tree.column('#6', minwidth=60, width=90, stretch=0)
 # add Sql data to treeview
 try:
     mycur.execute(
-        "SELECT purchase_details.p_id, supplier.sup_name, purchase_details.p_date, purchase_details.p_med_id, purchase_details.p_qty, purchase_details.p_totalamt FROM purchase_details "
-        "INNER JOIN supplier ON purchase_details.p_sup_id=supplier.sup_id Order BY purchase_details.p_date DESC")
+        "SELECT purchase_details.p_id, supplier.sup_name, purchase_details.p_date, purchase_details.p_med_id, "
+        "purchase_details.p_qty, purchase_details.p_totalamt FROM purchase_details "
+        "INNER JOIN supplier ON purchase_details.p_sup_id=supplier.sup_id Order BY purchase_details.p_id DESC")
     fetch = mycur.fetchall()
     for data in fetch:
         tree.insert('', 'end', values=(data[0], data[1], data[2], data[3], data[4], data[5]))
 except Exception as e:
     print(e)
     db.rollback()
+
 
 # bind the select event
 def item_selected(event):
@@ -284,10 +285,12 @@ def item_selected(event):
         showinfo(title='Information',
                  message=', '.join(map(str, record)))
 
-#to stop column movement
+
+# to stop column movement
 def handle_click(event):
     if tree.identify_region(event.x, event.y) == "separator":
         return "break"
+
 
 tree.bind('<Button-1>', handle_click)
 tree.bind('<<TreeviewSelect>>', item_selected)

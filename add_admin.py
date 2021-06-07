@@ -226,6 +226,9 @@ def add_admin():
     test = ' !,@,#,$,%,^,&,*,(,),<,>,?,/,|,~,{,},:,_,- '
 
     try:
+        if name == "" or username == "" or password == "" or phone == "":
+            raise Exception("Fields are Empty.")  # or values can't be null
+
         for c in username:
             if not (c.isalnum() or c.isdigit or re.search(test, username)):
                 raise Exception(" Enter proper username.")
@@ -238,9 +241,9 @@ def add_admin():
             if not (c.isalpha() or c.isspace()):
                 raise Exception(" Name should contain alphabets only. ")
 
-        if (phone == True):
-            if len(phone) > 10 or len(phone) < 10:
-                raise Exception(" Phone no. should contain 10 digits.")
+        # if (phone == True):
+        if len(phone) > 10 or len(phone) < 10:
+            raise Exception(" Phone no. should contain 10 digits.")
 
         if not phone.isdigit:
             raise Exception(" Phone no. should contain only digits")
@@ -252,8 +255,7 @@ def add_admin():
             raise Exception(" Invalid Email.")
             # print("Name : " , name == "")
 
-        if (name == "" or username == "" or password == "" or phone == ""):
-            raise Exception("Fields are Empty.")  # or values can't be null
+
 
     except ValueError:
         print("Fields can't be empty.")
@@ -293,7 +295,6 @@ def add_admin():
 
 
 def clear_fileds():
-    mb.showinfo("Warning", "Data not Submitted", icon="warning")
     e1.delete(0, END)
     e2.delete(0, END)
     e3.delete(0, END)

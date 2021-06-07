@@ -38,7 +38,9 @@ frame_top.grid_propagate(False)
 
 # Scrollable Text
 svar = tk.StringVar()
-Scrollable_text = tk.Label(frame_top, textvariable=svar, height=1, width=200, font=("Helvetica", 14, "bold"), fg="White", bg="#285e5a")
+Scrollable_text = tk.Label(frame_top, textvariable=svar, height=1, width=200, font=("Helvetica", 14, "bold"),
+                           fg="White", bg="#285e5a")
+
 
 def shif():
     deli = 195
@@ -46,9 +48,11 @@ def shif():
     svar.set(shif.msg)
     root.after(deli, shif)
 
+
 shif.msg = '  Welcome  To  Medical  Store  Management  System!  Wear  Mask,  Stay  Safe!!  '
 shif()
 Scrollable_text.grid(column=0, row=1, pady=12, padx=50)
+
 
 # -------------------------------------------------------------------------------------------------------------
 # left dashboard
@@ -58,9 +62,11 @@ def call_dashboard():
     root.destroy()
     os.system('python3 dashboard.py')
 
+
 def call_addadmin():
     root.destroy()
     os.system('python3 add_admin.py')
+
 
 def call_viewadmin():
     root.destroy()
@@ -71,25 +77,31 @@ def call_viewmedicine():
     root.destroy()
     os.system('python3 view_medicines.py')
 
+
 def call_viewcustomer():
     root.destroy()
     os.system('python3 view_customer.py')
+
 
 def call_viewsupplier():
     root.destroy()
     os.system('python3 view_supplier.py')
 
+
 def call_addsales():
     root.destroy()
     os.system('python3 add_sales.py')
+
 
 def call_viewsales():
     root.destroy()
     os.system('python3 view_sales.py')
 
+
 def call_addpurchase():
     root.destroy()
     os.system('python3 add_purchase.py')
+
 
 def call_viewpurchase():
     root.destroy()
@@ -100,7 +112,6 @@ def call_viewpurchase():
 dashoboard = Button(frame_left, text="DASHBOARD", font=("Helvetica", 11, "bold"), command=call_dashboard,
                     bg="#50aba5", width=21)
 dashoboard.grid(column=1, row=0, pady=12, padx=20)
-
 
 # Left_Menu1
 MenuBttn = Menubutton(frame_left, text="ADMIN", font=("Helvetica", 11, "bold"), bg="#50aba5", width=23)
@@ -219,19 +230,18 @@ def clear_fileds():
 
 
 def submit_clicked():
-    """ callback when the submit button clicked
-    """
-    msg = f'You entered name: {add_name.get()}, company: {add_company.get()}, price: {add_price.get()}'
     showinfo(
         title='Result',
-        message='New Medicine added!!'
+        message="New Medicine Added."
     )
+
 
 cancel = Button(frame_right, text="CANCEL", font=("Verdana", 13, "bold"), bg="#50aba5", border=2, cursor="hand2",
                 command=clear_fileds).place(x=190, y=300, height=35, width=150)
 
 submit = Button(frame_right, text="SUBMIT", font=("Verdana", 13, "bold"), bg="#50aba5", border=2, cursor="hand2",
-                command=lambda: [medicine_add(), submit_clicked(), clear_fileds()]).place(x=380, y=300, height=35, width=150)
+                command=lambda: [medicine_add(), submit_clicked(), clear_fileds()]).place(x=380, y=300, height=35,
+                                                                                          width=150)
 
 # ------------------------------------------------------------------------------------------------
 root.mainloop()

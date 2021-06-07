@@ -188,7 +188,6 @@ add_email = tk.StringVar()
 cust_list = Label(frame_right, text=" Customers List ", font=("Times New Roman", 20, "bold"), fg="White", bg="#285e5a")
 cust_list.place(x=250, y=24, height=35, width=200)
 
-
 # columns
 columns = ('#1', '#2', '#3', '#4', '#5')
 
@@ -215,7 +214,6 @@ tree.column('#4', minwidth=100, width=105, stretch=0)
 
 tree.heading('#5', text='Email', anchor=CENTER)
 tree.column('#5', minwidth=100, width=200, stretch=0)
-
 
 # add Sql data to treeview
 try:
@@ -269,12 +267,10 @@ def delete_data(tree):
         mycur.execute(del_query, sel_data)
         db.commit()
         tree.delete(selected_item)
-        mb.showinfo("success", "CUSTOMER data deleted!")
+        mb.showinfo("success", "Customer data deleted!")
     except Exception as e:
         print(e)
         db.rollback()
-
-
 
 
 # Update_table_selection
@@ -291,10 +287,10 @@ def select_data(tree):
     values = tree.item(curItem, "values")
     print(values)
 
-    head = Label(f, text="Update Customer",width=15, font=("Times New Roman", 14, "bold"), fg="White", bg="#285e5a")
+    head = Label(f, text="Update Customer", width=15, font=("Times New Roman", 14, "bold"), fg="White", bg="#285e5a")
     head.place(x=110, y=20)
 
-    l1 = Label(f, text="Name",font=("Times New Roman", 14, "bold"), bg="#c5dedd")
+    l1 = Label(f, text="Name", font=("Times New Roman", 14, "bold"), bg="#c5dedd")
     l1.place(x=55, y=70)
     e1 = Entry(f, textvariable=add_name, width=17, font="Verdana 11")
     e1.place(x=130, y=70)
@@ -318,7 +314,6 @@ def select_data(tree):
     e4.place(x=130, y=190)
     e4.delete(0, END)
 
-
     e1.insert(0, (values[1]))
     e2.insert(0, (values[2]))
     e3.insert(0, (values[3]))
@@ -326,28 +321,61 @@ def select_data(tree):
 
     def update_data():
         # nonlocal e1, e2, e3, curItem, values
+        regex = '^(\w|\.|\_|\-)+[@](\w|\_|\-|\.)+[.]\w{2,3}$'
         try:
             e1 = add_name.get()
             e2 = add_city.get()
             e3 = add_phone.get()
             e4 = add_email.get()
+
+            if e1 == "" or e2 == "" or e3 == "" or e4 == '':
+                raise Exception("Fields are Empty.")  # or values can't be null
+
+            for c in e1:
+                if not (c.isalpha() or c.isspace()):
+                    raise Exception(" Name should contain alphabets only. ")
+
+            for c in e2:
+                if not (c.isalpha() or c.isspace()):
+                    raise Exception(" Incorrect City Name. ")
+
+            if len(e3) > 10 or len(e3) < 10:
+                raise Exception(" Phone no. should contain 10 digits.")
+
+            if not e3.isdigit:
+                raise Exception(" Phone no. should contain only digits")
+
+            if re.search(regex, e4):
+                pass
+            else:
+                raise Exception(" Invalid Email.")
+
+        except Exception as e:
+            print("Issue --> ", e)
+            mb.showerror("ERROR ", e)
+            db.rollback()
+        except Exception:
+            print("Invalid data.")
+            mb.showerror("Invalid Data.")
+            db.rollback()
+
+        else:
             tree.item(curItem, values=(values[0], e1, e2, e3, e4))
-            print("Customer id",values[0])
+            print("Customer id", values[0])
             mycur.execute("UPDATE customer SET cust_name=%s, cust_city=%s, cust_phn=%s, cust_email=%s WHERE cust_id=%s",
                           (e1, e2, e3, e4, values[0]))
             db.commit()
-            mb.showinfo("Success", "Admin data Updated")
-        except Exception as e:
-            print(e)
-            db.rollback()
+            mb.showinfo("Success", "Customer data Updated")
 
         f.destroy()
 
-    cancelbutton = tk.Button(f, text="CANCEL",font=("Times New Roman", 12, "bold"), bg="#50aba5", width=8,
+        f.destroy()
+
+    cancelbutton = tk.Button(f, text="CANCEL", font=("Times New Roman", 12, "bold"), bg="#50aba5", width=8,
                              command=f.destroy)
     cancelbutton.place(x=100, y=245)
-    savebutton = tk.Button(f, text="SAVE",font=("Times New Roman", 12, "bold"), bg="#50aba5", width=8,
-                            command=update_data)
+    savebutton = tk.Button(f, text="SAVE", font=("Times New Roman", 12, "bold"), bg="#50aba5", width=8,
+                           command=update_data)
     savebutton.place(x=200, y=245)
 
 

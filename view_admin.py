@@ -4,10 +4,10 @@ import tkinter.ttk as ttk
 from tkinter import messagebox as mb
 import MySQLdb
 import os
+import re
 
-
-#connecting_to_the_database
-db = MySQLdb.connect(host="localhost",user="root",passwd="",database="medical")
+# connecting_to_the_database
+db = MySQLdb.connect(host="localhost", user="root", passwd="", database="medical")
 mycur = db.cursor()
 
 root = Tk()
@@ -18,11 +18,10 @@ root.resizable('false', 'false')
 root.grid_rowconfigure(1, weight=1)
 root.grid_columnconfigure(0, weight=1)
 
-#frames
+# frames
 frame_top = Frame(root, width=800, height=50, bg="#285e5a")
 frame_left = Frame(root, width=240, height=420, bg="#285e5a")
 frame_right = Frame(root, width=740, height=420, bg="#c9d6d5")
-
 
 frame_top.grid(row=0, sticky="ew")
 frame_left.grid(row=1, sticky="w")
@@ -43,6 +42,7 @@ frame_right.grid_propagate(False)
 svar = tk.StringVar()
 Scrollable_text = tk.Label(frame_top, textvariable=svar, height=1, width=200, font=("Helvetica", 14, "bold"),
                            fg="White", bg="#285e5a")
+
 
 def shif():
     deli = 195
@@ -65,7 +65,7 @@ def call_dashboard():
 
 
 def call_addadmin():
-    root.destroy
+    root.destroy()
     os.system('python3 add_admin.py')
 
 
@@ -160,7 +160,7 @@ MenuBttn = Menubutton(frame_left, text="SALES", font=("Helvetica", 11, "bold"), 
 Menu5 = Menu(MenuBttn, tearoff=0)
 Menu5.add_command(label="          Add Sales     ", font=("Helvetica", 11, "bold"), command=call_addsales)
 Menu5.add_separator()
-Menu5.add_command(label="         View Sales         ", font=("Helvetica", 11), command=call_viewsales)
+Menu5.add_command(label="         View Sales         ", font=("Helvetica", 11, "bold"), command=call_viewsales)
 
 MenuBttn["menu"] = Menu5
 MenuBttn.grid(column=1, row=5, pady=12, padx=20)
@@ -187,16 +187,16 @@ add_phone = tk.StringVar()
 add_email = tk.StringVar()
 
 # label for admin list
-admin_list = Label(frame_right, text=" Admin List ", font=("Times New Roman", 20, "bold"), fg="White", bg="#285e5a")
-admin_list.place(x=250, y=24, height=35, width=200)
+admin_list = Label(frame_right, text=" Admin List ", font=("Times New Roman", 22, "bold"), fg="White", bg="#285e5a")
+admin_list.place(x=250, y=24, height=45, width=200)
 
 # columns
 columns = ('#1', '#2', '#3', '#4')
 
-tree = ttk.Treeview(frame_right, selectmode="extended", columns=columns, show='headings')
+tree = ttk.Treeview(frame_right, selectmode="extended", columns=columns, show='headings', height=8)
 style = ttk.Style()
-style.theme_use("clam") #can also give default
-style.configure("Treeview.Heading", font=('Verdana',12,"bold"), background ="#50aba5", foreground="Black")
+style.theme_use("clam")
+style.configure("Treeview.Heading", font=('Verdana', 12, "bold"), background="#50aba5", foreground="Black")
 style.configure('Treeview.Heading', rowheight=25)
 style.configure(".", font=('Helvetica', 11), foreground="Black")
 style.configure('.', rowheight=25)
@@ -214,7 +214,6 @@ tree.column('#3', minwidth=70, width=130, stretch=0)
 tree.heading('#4', text='Email', anchor=W)
 tree.column('#4', minwidth=100, width=240, stretch=0)
 
-
 # add Sql data to treeview
 try:
     mycur.execute("SELECT ad_id,ad_name,ad_phn,ad_email FROM `admin` ORDER BY `ad_id` ASC")
@@ -224,6 +223,7 @@ try:
 except Exception as e:
     print(e)
     db.rollback()
+
 
 # bind the select event
 def item_selected(event):
@@ -235,18 +235,16 @@ def item_selected(event):
         print(record)
 
 
-#to stop column movement
+# to stop column movement
 def handle_click(event):
     if tree.identify_region(event.x, event.y) == "separator":
         return "break"
 
 
-
-
 tree.bind('<Button-1>', handle_click)
 tree.bind('<<TreeviewSelect>>', item_selected)
 
-tree.grid(padx=20, pady=80)
+tree.grid(padx=20, pady=100)
 
 # add a scrollbar
 scrollbar = ttk.Scrollbar(frame_right, orient=tk.VERTICAL, command=tree.yview)
@@ -256,7 +254,7 @@ scrollbar.grid(row=0, column=1, sticky='ns', pady=80)
 # delete_table_selection
 deletebutton = tk.Button(frame_right, text="DELETE", command=lambda: (delete_data(tree), item_selected))
 deletebutton.configure(font=('Verdana', 12, 'bold'), bg="#318781", cursor="hand2")
-deletebutton.place(x=250, y=375)
+deletebutton.place(x=250, y=355)
 
 
 def delete_data(tree):
@@ -275,11 +273,10 @@ def delete_data(tree):
     mb.showinfo("success", "ADMIN data deleted!")
 
 
-
 # Update_table_selection
 updatebutton = tk.Button(frame_right, text="EDIT", command=lambda: (select_data(tree)))
 updatebutton.configure(font=('Verdana', 12, 'bold'), bg="#318781", cursor="hand2")
-updatebutton.place(x=420, y=375)
+updatebutton.place(x=420, y=355)
 
 
 def select_data(tree):
@@ -290,10 +287,10 @@ def select_data(tree):
     values = tree.item(curItem, "values")
     print(values)
 
-    head = Label(f, text="Update Admin",width=15, font=("Times New Roman", 14, "bold"), fg="White", bg="#285e5a")
+    head = Label(f, text="Update Admin", width=15, font=("Times New Roman", 14, "bold"), fg="White", bg="#285e5a")
     head.place(x=110, y=20)
 
-    l1 = Label(f, text="Name",font=("Times New Roman", 14, "bold"), bg="#c5dedd")
+    l1 = Label(f, text="Name", font=("Times New Roman", 14, "bold"), bg="#c5dedd")
     l1.place(x=55, y=80)
     e1 = Entry(f, textvariable=add_name, width=17, font="Verdana 11")
     e1.place(x=130, y=80)
@@ -358,17 +355,12 @@ def select_data(tree):
             mb.showinfo("Success", "Admin data Updated")
             f.destroy()
 
-
-    cancelbutton = tk.Button(f, text="CANCEL",font=("Times New Roman", 12, "bold"), bg="#50aba5", width=8,
+    cancelbutton = tk.Button(f, text="CANCEL", font=("Times New Roman", 12, "bold"), bg="#50aba5", width=8,
                              command=f.destroy)
     cancelbutton.place(x=100, y=230)
-    savebutton = tk.Button(f, text="SAVE",font=("Times New Roman", 12, "bold"), bg="#50aba5", width=8,
-                            command=update_data)
+    savebutton = tk.Button(f, text="SAVE", font=("Times New Roman", 12, "bold"), bg="#50aba5", width=8,
+                           command=update_data)
     savebutton.place(x=200, y=230)
-
-
-
-
 
 
 root.mainloop()

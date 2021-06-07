@@ -5,7 +5,7 @@ import os
 
 
 #connecting_to_the_database
-db = MySQLdb.connect(host="localhost",user="root",passwd="",database="medical")
+db = MySQLdb.connect(host="localhost", user="root", passwd="", database="medical")
 mycur = db.cursor()
 
 
