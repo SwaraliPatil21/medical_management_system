@@ -4,8 +4,4 @@ Our Project, Medical Store Management System can lead to secure, reliable and fa
 
 This project is totally built at administrative end and thus only the administrator is guaranteed the access. In this project, we can add, modify and delete records of customers, suppliers and medicines. We can also track expiry of medicines added into stock. Automated system to generate and save bills to specified folder, depending upon transaction is Sales or Purchase.
 
-<<<<<<< HEAD
 The aim is to automate its existing manual system by the help of computerized system which maintains records without redundant entries and can be stored for a longer period with easy accessing and manipulation of data.
-=======
-The aim is to automate its existing manual system by the help of computerized system which maintains records without redundant entries and can be stored for a longer period with easy accessing and manipulation of data.
->>>>>>> ef874f802312cef018b996de20a640e66715c1d9
