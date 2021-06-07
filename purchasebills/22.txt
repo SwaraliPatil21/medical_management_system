@@ -1,0 +1,16 @@
+	   Medical Management System
+
+Bill Number:	22
+Supplier Name:	Shree Distributers
+Date:	2021-05-23
+
+=========================================
+Medicines		Rate	Qty	Price
+=========================================
+Amlong 10S		34	90	3060
+Dolo 10S		20	100	2000
+
+=========================================
+Total Paybill Amount :	  5060
+
+=========================================

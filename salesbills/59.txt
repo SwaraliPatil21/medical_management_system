@@ -1,0 +1,16 @@
+	  Medical Management System
+
+Bill Number:	59
+Customer Name:	Mugdha
+Date: 2021-05-20
+
+=======================================
+Medicines		Rate	Qty	Price
+=======================================
+Ciplar 10S		15	3	45
+Corex 50ml		56	5	280
+
+=======================================
+Total Paybill Amount :	  325
+
+=======================================
