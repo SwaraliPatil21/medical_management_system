@@ -3,6 +3,7 @@ INSERT INTO `admin`(`ad_usname`, `ad_pass`, `ad_name`, `ad_phn`, `ad_email`) VAL
 ('swara21', 'swarali21@','Swarali Patil', 7814529029, 'swarali@gmail.com'), 
 ('mugdha22', 'mugdha22@','Mugdha Sholapure',8733127987, 'mugdha28@gmail.com');
 
+
 INSERT INTO `supplier` (`sup_agency`, `sup_name`, `sup_phn`, `sup_email`, `sup_addr`) VALUES
 ('Golmaal Distributers','Gopal',255698,'golmaal@gmail.com','sec-17,vashi'),
 ('Dhoom Distributers','Jay',289843,'dhoom@gmail.com','sec-24,seawoods'),
