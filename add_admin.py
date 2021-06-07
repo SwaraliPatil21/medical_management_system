@@ -23,12 +23,12 @@ def add_admin_():
     global add_phone
     global add_email
 
+
 add_name = StringVar()
 add_username = StringVar()
 add_password = StringVar()
 add_phone = StringVar()
 add_email = StringVar()
-
 
 # frames
 frame_top = Frame(root, width=800, height=50, bg="#285e5a")
@@ -54,7 +54,9 @@ frame_top.grid_propagate(False)
 
 # Scrollable Text
 svar = tk.StringVar()
-Scrollable_text = tk.Label(frame_top, textvariable=svar, height=1, width=200, font=("Helvetica", 14, "bold"), fg="White", bg="#285e5a")
+Scrollable_text = tk.Label(frame_top, textvariable=svar, height=1, width=200, font=("Helvetica", 14, "bold"),
+                           fg="White", bg="#285e5a")
+
 
 def shif():
     deli = 195
@@ -62,9 +64,11 @@ def shif():
     svar.set(shif.msg)
     root.after(deli, shif)
 
+
 shif.msg = '  Welcome  To  Medical  Store  Management  System!  Wear  Mask,  Stay  Safe!!  '
 shif()
 Scrollable_text.grid(column=0, row=1, pady=12, padx=50)
+
 
 # -------------------------------------------------------------------------------------------------------------
 # left dashboard
@@ -74,37 +78,46 @@ def call_dashboard():
     root.destroy()
     os.system('python3 dashboard.py')
 
+
 def call_viewadmin():
     root.destroy()
     os.system('python3 view_admin.py')
+
 
 def call_addmedicine():
     root.destroy()
     os.system('python3 add_medicine.py')
 
+
 def call_viewmedicine():
     root.destroy()
     os.system('python3 view_medicines.py')
+
 
 def call_viewcustomer():
     root.destroy()
     os.system('python3 view_customer.py')
 
+
 def call_viewsupplier():
     root.destroy()
     os.system('python3 view_supplier.py')
+
 
 def call_addsales():
     root.destroy()
     os.system('python3 add_sales.py')
 
+
 def call_viewsales():
     root.destroy()
     os.system('python3 view_sales.py')
 
+
 def call_addpurchase():
     root.destroy()
     os.system('python3 add_purchase.py')
+
 
 def call_viewpurchase():
     root.destroy()
@@ -115,7 +128,6 @@ def call_viewpurchase():
 dashoboard = Button(frame_left, text="DASHBOARD", font=("Helvetica", 11, "bold"), command=call_dashboard,
                     bg="#50aba5", width=21)
 dashoboard.grid(column=1, row=0, pady=12, padx=20)
-
 
 # Left_Menu1
 MenuBttn = Menubutton(frame_left, text="ADMIN", font=("Helvetica", 11, "bold"), bg="#50aba5", width=23)
@@ -188,7 +200,7 @@ MenuBttn.grid(column=1, row=6, pady=12, padx=20)
 # --------------------------------------------------------------------
 # Right Frame
 
-heading = Label(frame_right, text=" Add Admin ", font=("Times New Roman", 20, "bold"),  fg="White", bg="#285e5a")
+heading = Label(frame_right, text=" Add Admin ", font=("Times New Roman", 20, "bold"), fg="White", bg="#285e5a")
 heading.grid(padx=305, pady=40)
 
 Label(frame_right, text="Name", font=("Times New Roman", 18, "bold"), bg="#c9d6d5").place(x=200, y=100)
@@ -302,11 +314,13 @@ def clear_fileds():
     e5.delete(0, END)
 
 
-cancel = Button(frame_right, text="CANCEL", font=("Helvetica", 13, "bold"), width=9, bg="#50aba5", border=2, cursor= "hand2",
+cancel = Button(frame_right, text="CANCEL", font=("Helvetica", 13, "bold"), width=9, bg="#50aba5", border=2,
+                cursor="hand2",
                 command=lambda: [clear_fileds()])
 cancel.place(x=270, y=365, height=30)
 
-submit = Button(frame_right, text="SUBMIT", font=("Helvetica", 13, "bold"), width=9, bg="#50aba5", border=2, cursor= "hand2",
+submit = Button(frame_right, text="SUBMIT", font=("Helvetica", 13, "bold"), width=9, bg="#50aba5", border=2,
+                cursor="hand2",
                 command=lambda: [add_admin()])
 submit.place(x=400, y=365, height=30)
 

@@ -203,8 +203,6 @@ def search():
         print("ERROR --> ", e)
 
     else:
-        # try:
-
         mycur.execute("SELECT med_comp,med_name,med_price FROM med_details where med_id = '" + med_id + "'")
         myresult = mycur.fetchall()
 

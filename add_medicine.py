@@ -235,13 +235,10 @@ def submit_clicked():
         message="New Medicine Added."
     )
 
-
 cancel = Button(frame_right, text="CANCEL", font=("Verdana", 13, "bold"), bg="#50aba5", border=2, cursor="hand2",
                 command=clear_fileds).place(x=190, y=300, height=35, width=150)
 
 submit = Button(frame_right, text="SUBMIT", font=("Verdana", 13, "bold"), bg="#50aba5", border=2, cursor="hand2",
                 command=lambda: [medicine_add(), submit_clicked(), clear_fileds()]).place(x=380, y=300, height=35,
                                                                                           width=150)
-
-# ------------------------------------------------------------------------------------------------
 root.mainloop()

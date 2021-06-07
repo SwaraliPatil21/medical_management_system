@@ -467,5 +467,4 @@ button3 = Button(frame_right, text=(str("Stock Shortage"'\n'"%s " % myresult_stc
               command=stock_short,bg="#94604b", width=14, height=2,bd=7)
 button3.place(x=208, y=300)
 
-
 root.mainloop()

@@ -190,9 +190,8 @@ add_qty = tk.StringVar()
 med_list = Label(frame_right, text=" Medicine List ", font=("Times New Roman", 20, "bold"), fg="White", bg="#285e5a")
 med_list.place(x=265, y=30, height=30, width=200)
 
-
 # columns
-columns = ('#1', '#2', '#3', '#4','#5')
+columns = ('#1', '#2', '#3', '#4', '#5')
 
 tree = ttk.Treeview(frame_right, selectmode="extended", columns=columns, show='headings')
 style = ttk.Style()
@@ -217,7 +216,6 @@ tree.column('#4', minwidth=70, width=100, stretch=0)
 
 tree.heading('#5', text='Quantity', anchor=W)
 tree.column('#5', minwidth=100, width=95, stretch=0)
-
 
 # add Sql data to treeview
 try:
@@ -279,7 +277,6 @@ def delete_data(tree):
     mb.showinfo("success", "Medicine data deleted!")
 
 
-
 # Update_table_selection
 updatebutton = tk.Button(frame_right, text="EDIT", command=lambda: (select_data(tree)))
 updatebutton.configure(font=('Verdana', 12, 'bold'), bg="#318781", cursor="hand2")
@@ -294,10 +291,10 @@ def select_data(tree):
     values = tree.item(curItem, "values")
     print(values)
 
-    head = Label(f, text="Update Medicine",width=15, font=("Times New Roman", 14, "bold"), fg="White", bg="#285e5a")
+    head = Label(f, text="Update Medicine", width=15, font=("Times New Roman", 14, "bold"), fg="White", bg="#285e5a")
     head.place(x=110, y=20)
 
-    l1 = Label(f, text="Name",font=("Times New Roman", 14, "bold"), bg="#c5dedd")
+    l1 = Label(f, text="Name", font=("Times New Roman", 14, "bold"), bg="#c5dedd")
     l1.place(x=55, y=70)
     e1 = Entry(f, textvariable=add_name, width=17, font="Verdana 11")
     e1.place(x=150, y=70)
@@ -315,7 +312,6 @@ def select_data(tree):
     e3.place(x=150, y=150)
     e3.delete(0, END)
 
-
     e1.insert(0, (values[1]))
     e2.insert(0, (values[2]))
     e3.insert(0, (values[3]))
@@ -328,7 +324,7 @@ def select_data(tree):
             e3 = add_price.get()
             # e4 = add_qty.get()
             tree.item(curItem, values=(values[0], e1, e2, e3))
-            print("Medicine id",values[0])
+            print("Medicine id", values[0])
             mycur.execute("UPDATE med_details SET med_name=%s, med_comp=%s, med_price=%s WHERE med_id=%s",
                           (e1, e2, e3, values[0]))
             db.commit()
@@ -338,13 +334,12 @@ def select_data(tree):
         mb.showinfo("Success", "Medicine Data Updated!")
         f.destroy()
 
-    cancelbutton = tk.Button(f, text="CANCEL",font=("Times New Roman", 12, "bold"), bg="#50aba5", width=8,
+    cancelbutton = tk.Button(f, text="CANCEL", font=("Times New Roman", 12, "bold"), bg="#50aba5", width=8,
                              command=f.destroy)
     cancelbutton.place(x=100, y=200)
-    savebutton = tk.Button(f, text="SAVE",font=("Times New Roman", 12, "bold"), bg="#50aba5", width=8,
-                            command=update_data)
+    savebutton = tk.Button(f, text="SAVE", font=("Times New Roman", 12, "bold"), bg="#50aba5", width=8,
+                           command=update_data)
     savebutton.place(x=200, y=200)
-
 
 
 root.mainloop()

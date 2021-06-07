@@ -63,7 +63,6 @@ def logg_destroy():
     root.destroy()
     os.system('python3 dashboard.py')
 
-
 def fail_destroy():
     fail.destroy()
 
@@ -75,8 +74,6 @@ def logged():
     Label(logg, text="Successful Login"'\n'"Welcome {}".format(username_verify.get()), fg="green", font="bold").pack()
     Button(logg, text="OK", bg="lightgrey", width=8, height=1, command=logg_destroy).pack()
 
-
-
 def failed():
     global fail
     fail = Toplevel(root)
@@ -85,7 +82,6 @@ def failed():
     Label(fail, text="Failed Login"'\n'"Check Username and Password", fg="red", font="bold").pack()
     Label(fail, text="").pack()
     Button(fail, text="OK", bg="lightgrey", width=8, height=1, command=fail_destroy).pack()
-
 
 def login_verify():
     user_verify = username_verify.get()

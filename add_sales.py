@@ -59,7 +59,6 @@ shif.msg = '  Welcome  To  Medical  Store  Management  System!  Wear  Mask,  Sta
 shif()
 Scrollable_text.grid(column=0, row=1, pady=12, padx=50)
 
-
 # -------------------------------------------------------------------------------------------------------------
 # left dashboard
 

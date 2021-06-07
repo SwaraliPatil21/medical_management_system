@@ -263,7 +263,6 @@ def sup_add():
 def sup_destroy():
     sup.destroy()
 
-
 # add_button_for_supplier
 addsup = Button(frame_right, text="+", font=("Verdana", 12, "bold"), fg="White", bg="#285e5a", command=add_sup_form)
 addsup.place(x=270, y=9, height=25, width=25)
@@ -436,7 +435,6 @@ def save_bill():
     else:
         return
 
-
 def welcome():
     textarea.delete(1.0, END)
     textarea.insert(END, "\t   Medical Management System")
@@ -457,7 +455,6 @@ def select_name(event):
     s_name = str(supplier_value.get())
 
     try:
-
         # for company
         mycur.execute("SELECT med_comp FROM med_details where med_name = '" + m_name + "'")
         print(m_name)

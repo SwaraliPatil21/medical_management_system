@@ -176,7 +176,6 @@ Menu6.add_command(label="     View Purchases    ", font=("Helvetica", 11, "bold"
 MenuBttn["menu"] = Menu6
 MenuBttn.grid(column=1, row=6, pady=12, padx=20)
 
-
 # --------------------------------------------------------------------------------------------------------------------
 # Right_frame
 # Search Function

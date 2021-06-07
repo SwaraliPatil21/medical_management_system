@@ -353,9 +353,6 @@ def select_data(tree):
             e4 = add_email.get()
             e5 = add_addr.get()
 
-            # for c in e1:
-            #     if not (c.isalpha() or c.isspace()):
-            #         raise Exception("Agency Name should contain alphabets only. ")
             if e1 == "" or e2 == "" or e3 == "" or e4 == '' or e5 == '':
                 raise Exception("Fields are Empty.")  # or values can't be null
 

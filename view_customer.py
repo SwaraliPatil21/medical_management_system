@@ -369,8 +369,6 @@ def select_data(tree):
 
         f.destroy()
 
-        f.destroy()
-
     cancelbutton = tk.Button(f, text="CANCEL", font=("Times New Roman", 12, "bold"), bg="#50aba5", width=8,
                              command=f.destroy)
     cancelbutton.place(x=100, y=245)
